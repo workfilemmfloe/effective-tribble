@@ -1,0 +1,55 @@
+package test.another;
+
+@java.lang.annotation.Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)
+public abstract @interface Anno {
+
+    public abstract java.lang.String value();
+}
+
+////////////////////
+
+package test.another;
+
+public final class TopLevelKt {
+
+    public TopLevelKt() {
+        super();
+    }
+    private static final int topLevelProperty = 2;
+
+    public static final java.lang.String topLevelFunction() {
+        return null;
+    }
+
+    public static final <X extends java.lang.CharSequence, T extends java.util.List<? extends X>>T topLevelGenericFunction() {
+        return null;
+    }
+
+    public static final int getTopLevelProperty() {
+        return 0;
+    }
+
+    public static final java.lang.String getTopLevelProperty2() {
+        return null;
+    }
+
+    public static final void extensionFunction(@Anno(value = "rec")
+    java.lang.String $receiver, @Anno(value = "1")
+    java.lang.String a, @Anno(value = "2")
+    java.lang.String b) {
+    }
+
+    @Anno(value = "extpr")
+    private static void extensionProperty$annotations(java.lang.Object p0) {
+    }
+
+    public static final <T extends java.lang.Object>java.lang.String getExtensionProperty(@Anno(value = "propRec")
+    T $receiver) {
+        return null;
+    }
+
+    public static final <T extends java.lang.Object>void setExtensionProperty(@Anno(value = "propRec")
+    T $receiver, @Anno(value = "setparam")
+    java.lang.String setParamName) {
+    }
+}
