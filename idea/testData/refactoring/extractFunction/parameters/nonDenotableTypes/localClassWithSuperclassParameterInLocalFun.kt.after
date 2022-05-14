@@ -1,0 +1,15 @@
+// PARAM_DESCRIPTOR: val a: foo.A defined in foo.bar
+// PARAM_TYPES: foo.A, T
+interface T
+
+fun foo(): T {
+    class A: T
+
+    fun a(a: A) = a
+
+    // SIBLING:
+    fun bar(): T {
+        val a = a(A())
+        return a(a)
+    }
+}
