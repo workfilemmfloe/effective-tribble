@@ -1,0 +1,64 @@
+/**
+# Syntax
+
+Relevant pages: [Packages](packages.html)
+*/
+
+
+[start]
+kotlinFile
+  : preamble toplevelObject*
+  ;
+
+[start]
+script
+  : preamble expression*
+  ;
+
+preamble
+  : fileAnnotations? packageHeader? import*
+  ;
+
+fileAnnotations
+  : fileAnnotation*
+  ;
+
+fileAnnotation
+  : "@" "file" ":" ("[" annotationEntry+ "]" | annotationEntry)
+  ;
+
+packageHeader
+  : modifiers "package" SimpleName{"."} SEMI?
+  ;
+
+import
+  : "import" SimpleName{"."} ("." "*" | "as" SimpleName)? SEMI?
+  ;
+
+/**
+See [Imports](packages.html#imports)
+*/
+
+toplevelObject
+  : package
+  : class
+  : object
+  : function
+  : property
+  : typeAlias
+  ;
+
+package
+  : "package" SimpleName{"."} "{"
+       import*
+       toplevelObject*
+    "}"
+  ;
+
+/**
+See [Packages](packages.html)
+*/
+
+typeAlias
+  : modifiers "typealias" SimpleName (typeParameters typeConstraints)? "=" type
+  ;
