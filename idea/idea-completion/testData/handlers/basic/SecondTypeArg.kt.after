@@ -1,0 +1,8 @@
+import java.util.HashMap
+import java.util.HashSet
+
+fun foo() {
+    val v = HashMap<String, HashSet<caret>
+}
+
+// ELEMENT: HashSet
