@@ -1,0 +1,18 @@
+fun Int.foo() {}
+
+open class A {
+   ~A.foo~fun foo(i: Int) {}
+}
+open class B {}
+
+fun test(a: A, b: B) {
+    with (a) {
+        with (b) {
+            // candidates with errors for receiver b going before candidates with errors for receiver a
+            // resolved to Int.foo with error: UNRESOLVED_REFERENCE_WRONG_RECEIVER
+            `!`foo(1.0)
+        }
+    }
+}
+
+fun <T, R> with(receiver: T, f: T.() -> R) : R = receiver.f()
