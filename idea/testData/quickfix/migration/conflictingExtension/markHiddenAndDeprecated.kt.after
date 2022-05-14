@@ -1,0 +1,7 @@
+// "Mark with @HiddenDeclaration and @Deprecated" "true"
+import java.io.File
+
+@HiddenDeclaration
+@Deprecated("Is replaced with automatic synthetic extension", ReplaceWith("name"))
+val File.<caret>name: String
+    get() = getName()
