@@ -1,0 +1,23 @@
+package
+
+public interface ExceptionTracker {
+}
+
+public/*package*/ open class LockBasedStorageManager {
+    public/*package*/ constructor LockBasedStorageManager()
+    @java.lang.Override public/*package*/ open fun foo(): kotlin.Unit
+
+    public/*package*/ interface ExceptionHandlingStrategy {
+        public abstract fun bar(): kotlin.Unit
+        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+    }
+
+    // Static members
+    public/*package*/ final /*synthesized*/ fun ExceptionHandlingStrategy(/*0*/ function: () -> kotlin.Unit): LockBasedStorageManager.ExceptionHandlingStrategy
+}
+
+public interface StorageManager {
+    public abstract fun foo(): kotlin.Unit
+}
