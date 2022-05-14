@@ -1,0 +1,21 @@
+package test;
+
+class C {
+    void foo(ClassWithStatics c) {
+        ClassWithStatics.Companion.staticMethod(ClassWithStatics.staticField);
+        c.instanceMethod();
+        ClassWithStatics.staticField += 2;
+    }
+
+    void methodReferences() {
+        JFunction1ReturnType<Integer> staticMethod = ClassWithStatics.Companion::staticMethod;
+        JFunction1ReturnType<ClassWithStatics> instanceMethod = ClassWithStatics::instanceMethod;
+    }
+}
+
+class D extends ClassWithStatics {
+    void foo() {
+        Companion.staticMethod(staticField);
+        value *= 2;
+    }
+}

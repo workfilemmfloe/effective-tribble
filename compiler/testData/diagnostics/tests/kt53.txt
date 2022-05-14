@@ -1,0 +1,4 @@
+package
+
+public val </*0*/ T, /*1*/ E> T.foo: E?
+public fun test(): kotlin.Int?
