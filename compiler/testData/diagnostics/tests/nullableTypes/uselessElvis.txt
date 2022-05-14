@@ -1,0 +1,5 @@
+package
+
+public fun </*0*/ T> test1(/*0*/ t: kotlin.Any?): kotlin.Any
+public fun </*0*/ T : kotlin.Any> test2(/*0*/ t: kotlin.Any?): kotlin.Any
+public fun </*0*/ T> test3(/*0*/ t: kotlin.Any?): kotlin.Any

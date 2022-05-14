@@ -1,0 +1,5 @@
+package
+
+public fun </*0*/ T> listOf(/*0*/ t: T): kotlin.List<T>
+public fun test(): kotlin.Unit
+public fun </*0*/ T : p.Super> kotlin.Collection<T>.foo(): T

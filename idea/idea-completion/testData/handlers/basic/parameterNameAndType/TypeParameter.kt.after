@@ -1,0 +1,4 @@
+fun<T> foo(thread: Thread)
+
+// TODO_ELEMENT: t
+// ELEMENT: thread
