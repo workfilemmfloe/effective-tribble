@@ -1,0 +1,5 @@
+package test
+
+internal object Bar {
+    /*primary*/ private constructor Bar()
+}

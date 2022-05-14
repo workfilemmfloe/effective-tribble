@@ -1,0 +1,13 @@
+package a
+
+import java.lang.AssertionError
+
+fun foo() {
+    if (!true) {
+        throw AssertionError("text")
+    }
+}
+
+class AssertionError
+
+// WITH_RUNTIME
