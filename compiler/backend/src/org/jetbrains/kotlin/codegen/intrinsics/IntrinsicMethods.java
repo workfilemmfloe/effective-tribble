@@ -1,0 +1,187 @@
+/*
+ * Copyright 2010-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.jetbrains.kotlin.codegen.intrinsics;
+
+import com.google.common.collect.ImmutableList;
+import kotlin.text.StringsKt;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.builtins.KotlinBuiltIns;
+import org.jetbrains.kotlin.builtins.PrimitiveType;
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor;
+import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.name.FqNameUnsafe;
+import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.jvm.JvmPrimitiveType;
+import org.jetbrains.kotlin.types.expressions.OperatorConventions;
+
+import static org.jetbrains.kotlin.builtins.KotlinBuiltIns.BUILT_INS_PACKAGE_FQ_NAME;
+import static org.jetbrains.org.objectweb.asm.Opcodes.*;
+
+public class IntrinsicMethods {
+    public static final String INTRINSICS_CLASS_NAME = "kotlin/jvm/internal/Intrinsics";
+
+    private static final FqName KOTLIN_JVM = new FqName("kotlin.jvm");
+    /* package */ static final FqNameUnsafe RECEIVER_PARAMETER_FQ_NAME = new FqNameUnsafe("T");
+
+    private static final IntrinsicMethod UNARY_MINUS = new UnaryMinus();
+    private static final IntrinsicMethod UNARY_PLUS = new UnaryPlus();
+    private static final IntrinsicMethod NUMBER_CAST = new NumberCast();
+    private static final IntrinsicMethod INV = new Inv();
+    private static final IntrinsicMethod RANGE_TO = new RangeTo();
+    private static final IntrinsicMethod INC = new Increment(1);
+    private static final IntrinsicMethod DEC = new Increment(-1);
+    private static final IntrinsicMethod HASH_CODE = new HashCode();
+
+    private static final IntrinsicMethod ARRAY_SIZE = new ArraySize();
+    private static final Equals EQUALS = new Equals();
+    private static final IdentityEquals IDENTITY_EQUALS = new IdentityEquals();
+    private static final IteratorNext ITERATOR_NEXT = new IteratorNext();
+    private static final ArraySet ARRAY_SET = new ArraySet();
+    private static final ArrayGet ARRAY_GET = new ArrayGet();
+    private static final StringPlus STRING_PLUS = new StringPlus();
+    private static final ToString TO_STRING = new ToString();
+    private static final Clone CLONE = new Clone();
+
+    private static final IntrinsicMethod ARRAY_ITERATOR = new ArrayIterator();
+    private final IntrinsicsMap intrinsicsMap = new IntrinsicsMap();
+
+    public IntrinsicMethods() {
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, null, "javaClass", 0, new JavaClassFunction());
+        intrinsicsMap.registerIntrinsic(KOTLIN_JVM, RECEIVER_PARAMETER_FQ_NAME, "javaClass", -1, new JavaClassProperty());
+        intrinsicsMap.registerIntrinsic(KOTLIN_JVM, KotlinBuiltIns.FQ_NAMES.kClass, "java", -1, new KClassJavaProperty());
+        intrinsicsMap.registerIntrinsic(new FqName("kotlin.jvm.internal.unsafe"), null, "monitorEnter", 1, MonitorInstruction.MONITOR_ENTER);
+        intrinsicsMap.registerIntrinsic(new FqName("kotlin.jvm.internal.unsafe"), null, "monitorExit", 1, MonitorInstruction.MONITOR_EXIT);
+        intrinsicsMap.registerIntrinsic(KOTLIN_JVM, KotlinBuiltIns.FQ_NAMES.array, "isArrayOf", 0, new IsArrayOf());
+
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, null, "arrayOf", 1, new JavaClassArray());
+
+        // TODO: drop when deprecated kotlin.javaClass property is gone
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, RECEIVER_PARAMETER_FQ_NAME, "javaClass", -1, new JavaClassProperty());
+
+        ImmutableList<Name> primitiveCastMethods = OperatorConventions.NUMBER_CONVERSIONS.asList();
+        for (Name method : primitiveCastMethods) {
+            String methodName = method.asString();
+            declareIntrinsicFunction("Number", methodName, 0, NUMBER_CAST);
+            for (PrimitiveType type : PrimitiveType.NUMBER_TYPES) {
+                declareIntrinsicFunction(type.getTypeName().asString(), methodName, 0, NUMBER_CAST);
+            }
+        }
+
+        for (PrimitiveType type : PrimitiveType.NUMBER_TYPES) {
+            String typeName = type.getTypeName().asString();
+            declareIntrinsicFunction(typeName, "plus", 0, UNARY_PLUS);
+            declareIntrinsicFunction(typeName, "unaryPlus", 0, UNARY_PLUS);
+            declareIntrinsicFunction(typeName, "minus", 0, UNARY_MINUS);
+            declareIntrinsicFunction(typeName, "unaryMinus", 0, UNARY_MINUS);
+            declareIntrinsicFunction(typeName, "inv", 0, INV);
+            declareIntrinsicFunction(typeName, "rangeTo", 1, RANGE_TO);
+            declareIntrinsicFunction(typeName, "inc", 0, INC);
+            declareIntrinsicFunction(typeName, "dec", 0, DEC);
+        }
+
+        for (PrimitiveType type : PrimitiveType.values()) {
+            String typeName = type.getTypeName().asString();
+            declareIntrinsicFunction(typeName, "equals", 1, EQUALS);
+            declareIntrinsicFunction(typeName, "hashCode", 0, HASH_CODE);
+            declareIntrinsicFunction(typeName, "toString", 0, TO_STRING);
+
+            intrinsicsMap.registerIntrinsic(
+                    BUILT_INS_PACKAGE_FQ_NAME, null, StringsKt.decapitalize(type.getArrayTypeName().asString()) + "Of", 1, new JavaClassArray()
+            );
+        }
+
+        declareBinaryOp("plus", IADD);
+        declareBinaryOp("minus", ISUB);
+        declareBinaryOp("times", IMUL);
+        declareBinaryOp("div", IDIV);
+        declareBinaryOp("mod", IREM);
+        declareBinaryOp("shl", ISHL);
+        declareBinaryOp("shr", ISHR);
+        declareBinaryOp("ushr", IUSHR);
+        declareBinaryOp("and", IAND);
+        declareBinaryOp("or", IOR);
+        declareBinaryOp("xor", IXOR);
+
+        declareIntrinsicFunction("Boolean", "not", 0, new Not());
+
+        declareIntrinsicFunction("String", "plus", 1, new Concat());
+        declareIntrinsicFunction("String", "get", 1, new StringGetChar());
+
+        declareIntrinsicFunction("Cloneable", "clone", 0, CLONE);
+
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, KotlinBuiltIns.FQ_NAMES.any, "toString", 0, TO_STRING);
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, KotlinBuiltIns.FQ_NAMES.any, "identityEquals", 1, IDENTITY_EQUALS);
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, KotlinBuiltIns.FQ_NAMES.string, "plus", 1, STRING_PLUS);
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME, null, "arrayOfNulls", 1, new NewArray());
+
+        for (PrimitiveType type : PrimitiveType.values()) {
+            String typeName = type.getTypeName().asString();
+            declareIntrinsicFunction(typeName, "compareTo", 1, new CompareTo());
+            declareIntrinsicFunction(typeName + "Iterator", "next", 0, ITERATOR_NEXT);
+        }
+
+        declareArrayMethods();
+    }
+
+    private void declareArrayMethods() {
+        for (JvmPrimitiveType jvmPrimitiveType : JvmPrimitiveType.values()) {
+            declareArrayMethodsForPrimitive(jvmPrimitiveType);
+        }
+
+        declareIntrinsicFunction("Array", "size", -1, ARRAY_SIZE);
+        declareIntrinsicFunction("Array", "set", 2, ARRAY_SET);
+        declareIntrinsicFunction("Array", "get", 1, ARRAY_GET);
+        declareIntrinsicFunction("Array", "clone", 0, CLONE);
+        declareIterator("Array");
+    }
+
+    private void declareArrayMethodsForPrimitive(@NotNull JvmPrimitiveType jvmPrimitiveType) {
+        String arrayTypeName = jvmPrimitiveType.getPrimitiveType().getArrayTypeName().asString();
+        declareIntrinsicFunction(arrayTypeName, "size", -1, ARRAY_SIZE);
+        declareIntrinsicFunction(arrayTypeName, "set", 2, ARRAY_SET);
+        declareIntrinsicFunction(arrayTypeName, "get", 1, ARRAY_GET);
+        declareIntrinsicFunction(arrayTypeName, "clone", 0, CLONE);
+        declareIterator(arrayTypeName);
+    }
+
+    private void declareIterator(@NotNull String arrayClassName) {
+        declareIntrinsicFunction(arrayClassName, "iterator", 0, ARRAY_ITERATOR);
+    }
+
+    private void declareBinaryOp(@NotNull String methodName, int opcode) {
+        BinaryOp op = new BinaryOp(opcode);
+        for (PrimitiveType type : PrimitiveType.values()) {
+            declareIntrinsicFunction(type.getTypeName().asString(), methodName, 1, op);
+        }
+    }
+
+    private void declareIntrinsicFunction(
+            @NotNull String className,
+            @NotNull String methodName,
+            int arity,
+            @NotNull IntrinsicMethod implementation
+    ) {
+        intrinsicsMap.registerIntrinsic(BUILT_INS_PACKAGE_FQ_NAME.child(Name.identifier(className)),
+                                        null, methodName, arity, implementation);
+    }
+
+    @Nullable
+    public IntrinsicMethod getIntrinsic(@NotNull CallableMemberDescriptor descriptor) {
+        return intrinsicsMap.getIntrinsic(descriptor);
+    }
+}
