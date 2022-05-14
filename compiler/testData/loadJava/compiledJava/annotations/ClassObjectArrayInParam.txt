@@ -1,0 +1,14 @@
+package test
+
+public open class ClassObjectArrayInParam {
+    public constructor ClassObjectArrayInParam()
+
+    public final annotation class Anno : kotlin.Annotation {
+        public constructor Anno(/*0*/ vararg value: java.lang.Class<*> /*kotlin.Array<out java.lang.Class<*>>*/)
+        public abstract fun value(): kotlin.Array<java.lang.Class<*>>
+    }
+
+    test.ClassObjectArrayInParam.Anno(value = {test.ClassObjectArrayInParam.class, test.ClassObjectArrayInParam.Nested.class, kotlin.String.class}: kotlin.Array<out java.lang.Class<*>>) public open class Nested {
+        public constructor Nested()
+    }
+}
