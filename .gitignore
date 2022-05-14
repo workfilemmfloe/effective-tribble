@@ -1,0 +1,13 @@
+.DS_Store
+android.tests.dependencies
+confluence/target
+dependencies
+dist
+gh-pages
+ideaSDK
+out
+pluginPublisher/idea*
+pluginPublisher/plugin-verifier.jar
+tmp
+workspace.xml
+*.versionsBackup

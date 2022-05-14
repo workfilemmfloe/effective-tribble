@@ -1,0 +1,3 @@
+package test
+
+internal fun jet.Int.shuffle(): jet.Int
