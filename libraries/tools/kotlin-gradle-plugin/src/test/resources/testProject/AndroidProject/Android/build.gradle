@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'file://' + pathToKotlinPlugin
+        }
+    }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.1-SNAPSHOT'
+        classpath 'com.android.tools.build:gradle:1.1.0'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+dependencies {
+    compile project(':Lib')
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    sourceSets {
+        main.kotlin.srcDirs += 'root/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 22
+    }
+
+    buildTypes {
+        jnidebug.initWith(buildTypes.debug)
+        jnidebug {
+            applicationIdSuffix ".jnidebug"
+            jniDebuggable true
+        }
+    }
+
+    productFlavors {
+        flavor1 {
+            applicationId "com.example.flavor1"
+            versionCode 20
+        }
+
+        flavor2 {
+            applicationId "com.example.flavor2"
+            minSdkVersion 14
+        }
+    }
+}
