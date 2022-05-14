@@ -1,0 +1,17 @@
+/**
+### Enum classes
+
+See [Enum classes](enum-classes.html)
+*/
+
+enumClassBody
+  : "{" enumEntries (";" members)? "}"
+  ;
+
+enumEntries (used by enumClassBody)
+  : (enumEntry{","} ","?)?
+  ;
+
+enumEntry
+  : modifiers SimpleName ((":" initializer) | ("(" arguments ")"))? classBody?
+  ;
