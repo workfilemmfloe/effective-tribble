@@ -1,0 +1,3 @@
+package test
+
+internal fun kotlin.Int.shuffle(): kotlin.Int
