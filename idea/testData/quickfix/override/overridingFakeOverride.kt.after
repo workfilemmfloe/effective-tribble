@@ -1,0 +1,18 @@
+// "Make XX.foo open" "true"
+interface X {
+    fun foo()
+}
+
+interface XX : X {
+    override open fun foo() {
+
+    }
+}
+
+interface Y : X, XX {
+}
+
+class B() : Y {
+    override fun foo() {
+    }
+}
