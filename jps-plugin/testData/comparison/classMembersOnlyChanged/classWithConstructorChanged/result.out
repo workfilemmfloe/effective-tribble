@@ -1,0 +1,5 @@
+CHANGES in test/ClassWithPrimaryConstructorChanged: CLASS_SIGNATURE
+CHANGES in test/ClassWithPrimaryConstructorVisibilityChanged: CLASS_SIGNATURE
+CHANGES in test/ClassWithSecondaryConstructorVisibilityChanged: CLASS_SIGNATURE
+CHANGES in test/ClassWithSecondaryConstructorsAdded: CLASS_SIGNATURE
+CHANGES in test/ClassWithSecondaryConstructorsRemoved: CLASS_SIGNATURE

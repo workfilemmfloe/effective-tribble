@@ -1,0 +1,4 @@
+CHANGES in test/A: MEMBERS
+    [abstractFlagAddedFun, abstractFlagAddedVal, abstractFlagRemovedFun, abstractFlagRemovedVal, infixFlagAddedFun, infixFlagRemovedFun, inlineFlagAddedFun, inlineFlagRemovedFun, internalFlagAddedFun, internalFlagAddedVal, internalFlagRemovedFun, internalFlagRemovedVal, lateinitFlagAddedVal, lateinitFlagRemovedVal, openFlagAddedFun, openFlagAddedVal, openFlagRemovedFun, openFlagRemovedVal, operatorFlagAddedFun, operatorFlagRemovedFun, privateFlagAddedFun, privateFlagAddedVal, privateFlagRemovedFun, privateFlagRemovedVal, protectedFlagAddedFun, protectedFlagAddedVal, protectedFlagRemovedFun, protectedFlagRemovedVal, tailrecFlagAddedFun, tailrecFlagRemovedFun]
+CHANGES in test/O: MEMBERS
+    [constFlagAddedVal, constFlagRemovedVal]

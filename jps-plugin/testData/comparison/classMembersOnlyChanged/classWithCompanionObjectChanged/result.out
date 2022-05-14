@@ -1,0 +1,11 @@
+REMOVED test/ClassWithChangedCompanionObject.FirstName
+REMOVED test/ClassWithRemovedCompanionObject.Companion
+ADDED test/ClassWithAddedCompanionObject.Companion
+ADDED test/ClassWithChangedCompanionObject.SecondName
+CHANGES in test/ClassWithAddedCompanionObject: CLASS_SIGNATURE, MEMBERS
+    [Companion]
+CHANGES in test/ClassWithChangedCompanionObject: CLASS_SIGNATURE, MEMBERS
+    [FirstName, SecondName]
+CHANGES in test/ClassWithChangedVisibilityForCompanionObject.Companion: CLASS_SIGNATURE
+CHANGES in test/ClassWithRemovedCompanionObject: CLASS_SIGNATURE, MEMBERS
+    [Companion]
