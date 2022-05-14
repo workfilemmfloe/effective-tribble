@@ -1,0 +1,4 @@
+$TESTDATA_DIR$/wrongKotlinSignature.kt
+$TESTDATA_DIR$/wrongKotlinSignatureLib
+-d
+$TEMP_DIR$

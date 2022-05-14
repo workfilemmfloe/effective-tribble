@@ -1,0 +1,10 @@
+package test
+
+internal final class A {
+    /*primary*/ public constructor A()
+
+    internal object B {
+        /*primary*/ private constructor B()
+        internal final fun foo(/*0*/ a: kotlin.Int): kotlin.String
+    }
+}
