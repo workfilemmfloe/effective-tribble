@@ -1,0 +1,52 @@
+/**
+## Types
+
+See [Types](basic-types.html)
+*/
+
+/*
+
+Foo<Bar<X>, T, Object> // user type
+(A, Object) -> Foo // function type
+() -> Foo // function with no arguments
+
+*/
+
+type
+  : annotations typeDescriptor
+  ;
+
+// IF YOU CHANGE THIS, please, update TYPE_FIRST in JetParsing
+typeDescriptor
+  : "(" typeDescriptor ")"
+//  : selfType
+  : functionType
+  : userType
+  : nullableType
+  : "dynamic"
+  ;
+
+nullableType
+  : typeDescriptor "?"
+
+/*
+selfType
+  : "This"
+  ;
+*/
+
+userType
+  : simpleUserType{"."}
+  ;
+
+simpleUserType
+  : SimpleName ("<" (optionalProjection type | "*"){","} ">")?
+  ;
+
+optionalProjection
+  : varianceAnnotation
+  ;
+
+functionType
+  : (type ".")? "(" (parameter | modifiers /*lazy out ref*/ type){","} ")" "->" type?
+  ;
