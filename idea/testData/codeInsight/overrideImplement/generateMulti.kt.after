@@ -1,0 +1,19 @@
+package something
+
+trait Some<T> {
+    fun someFoo()
+    fun someOtherFoo() : Int
+    fun someGenericFoo() : T
+}
+
+class SomeOther<S> : Some<S> {
+    override fun someFoo() {
+        <selection><caret>throw UnsupportedOperationException()</selection>
+    }
+    override fun someGenericFoo(): S {
+        throw UnsupportedOperationException()
+    }
+    override fun someOtherFoo(): Int {
+        throw UnsupportedOperationException()
+    }
+}
