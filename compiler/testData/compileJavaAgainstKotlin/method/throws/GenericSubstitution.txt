@@ -1,0 +1,23 @@
+package test
+
+public interface Base</*0*/ T> {
+    public open fun one(/*0*/ T): kotlin.Unit
+}
+
+public final class Derived : test.Base<kotlin.String> {
+    public constructor Derived()
+    public open /*fake_override*/ fun one(/*0*/ kotlin.String): kotlin.Unit
+}
+
+public final class E1 : java.lang.Exception {
+    public constructor E1()
+    public final /*fake_override*/ val cause: kotlin.Throwable?
+    public final /*fake_override*/ val message: kotlin.String?
+}
+
+public/*package*/ open class JavaClass {
+    public/*package*/ constructor JavaClass()
+
+    // Static members
+    public open fun main(/*0*/ kotlin.Array<(out) kotlin.String!>!): kotlin.Unit
+}
