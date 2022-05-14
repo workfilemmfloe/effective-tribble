@@ -1,0 +1,9 @@
+@file:JvmName("Test")
+@file:JvmMultifileClass
+package test
+
+fun foo(): String = bar()
+fun bar(): String = qux()
+fun qux(): String = "OK"
+
+fun box(): String = foo()

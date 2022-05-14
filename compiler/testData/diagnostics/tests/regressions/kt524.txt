@@ -1,0 +1,8 @@
+package
+
+package StringBuilder {
+    public val kotlin.Int.bd: java.lang.StringBuilder
+    public fun main(/*0*/ args: kotlin.Array<kotlin.String>): kotlin.Unit
+    public fun java.lang.StringBuilder.plus(/*0*/ other: java.lang.StringBuilder): java.lang.StringBuilder
+    public fun </*0*/ T : kotlin.Any> T?.sure1(): T
+}
