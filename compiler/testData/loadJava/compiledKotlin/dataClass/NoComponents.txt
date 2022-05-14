@@ -1,0 +1,5 @@
+package test
+
+kotlin.data() internal final class DataClass {
+    /*primary*/ public constructor DataClass()
+}
