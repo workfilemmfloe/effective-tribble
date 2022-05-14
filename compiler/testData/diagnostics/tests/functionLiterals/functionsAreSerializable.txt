@@ -1,0 +1,4 @@
+package
+
+public fun foo(/*0*/ bar: java.io.Serializable): kotlin.Any?
+public fun test(): kotlin.Unit
