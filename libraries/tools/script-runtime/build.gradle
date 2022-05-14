@@ -1,0 +1,39 @@
+description 'Kotlin Script Runtime'
+
+apply plugin: 'kotlin'
+
+configureJvmProject(project)
+configurePublishing(project)
+
+dependencies {
+    compileOnly project(':kotlin-stdlib')
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir "${rootDir}/../core/script.runtime/src"
+        }
+    }
+}
+
+jar {
+    manifestAttributes(manifest, project, 'Main')
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+dist {
+    from (jar, sourcesJar)
+}
+
+compileKotlin {
+    kotlinOptions.freeCompilerArgs = [
+            "-Xallow-kotlin-package",
+            "-module-name", project.name
+    ]
+}
