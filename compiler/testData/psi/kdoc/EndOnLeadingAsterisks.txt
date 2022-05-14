@@ -1,0 +1,9 @@
+JetFile: EndOnLeadingAsterisks.kt
+  PACKAGE_DIRECTIVE
+    <empty list>
+  KDoc
+    PsiElement(KDOC_START)('/**')
+    PsiWhiteSpace('\n ')
+    KDOC_SECTION
+      <empty list>
+    PsiElement(KDOC_END)('*/')

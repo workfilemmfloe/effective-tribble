@@ -1,0 +1,13 @@
+package test
+
+internal final annotation class Anno : kotlin.Annotation {
+    /*primary*/ public constructor Anno()
+}
+
+internal final class Class {
+    /*primary*/ public constructor Class()
+
+    test.Anno() internal companion object Companion {
+        /*primary*/ private constructor Companion()
+    }
+}
