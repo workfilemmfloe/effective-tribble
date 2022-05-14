@@ -1,0 +1,6 @@
+-InheritedSynthesizedFromDataClass.kt
+ -Derived
+  a: Int location=→TestData
+  field: Int
+  some(): Unit location=→TestData
+ TestData
