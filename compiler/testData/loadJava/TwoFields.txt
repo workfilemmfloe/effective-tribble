@@ -1,0 +1,7 @@
+package test
+
+public final class TwoFields : java.lang.Object {
+    public constructor TwoFields()
+    public final var a : jet.Int
+    public final var b : jet.Short
+}

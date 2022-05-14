@@ -1,0 +1,7 @@
+package test
+
+public open class PropertySimpleType : java.lang.Object {
+    public constructor PropertySimpleType()
+    public final var fieldOne : jet.String
+    public final var fieldTwo : jet.String?
+}

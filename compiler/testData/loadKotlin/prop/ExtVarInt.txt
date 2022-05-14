@@ -1,0 +1,3 @@
+package test
+
+internal var jet.Int.ggg : jet.Int

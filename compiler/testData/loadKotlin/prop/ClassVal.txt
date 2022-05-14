@@ -1,0 +1,6 @@
+package test
+
+internal final class ClassVal {
+    /*primary*/ public constructor ClassVal()
+    internal final val aa : jet.Int
+}

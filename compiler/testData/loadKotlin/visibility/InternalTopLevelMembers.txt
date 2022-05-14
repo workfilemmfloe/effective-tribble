@@ -1,0 +1,4 @@
+package test
+
+internal val x : jet.Int
+internal fun f() : jet.Int

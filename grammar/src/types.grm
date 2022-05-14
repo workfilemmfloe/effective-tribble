@@ -1,0 +1,59 @@
+/**
+h2. Types
+
+bq. See [Types]
+*/
+
+/*
+
+Foo<Bar<X>, T, Object> // user type
+(A, Object) -> Foo // function type
+() -> Foo // function with no arguments
+#(A, B, C) // tuple type
+#(a : A, b : B) // tuple type with named entries
+#() // 0-ary tuple type (Unit)
+
+*/
+
+type
+  : annotations typeDescriptor
+
+// IF YOU CHANGE THIS, please, update TYPE_FIRST in JetParsing
+typeDescriptor
+  : "(" typeDescriptor ")"
+  : selfType
+  : functionType
+  : userType
+  : tupleType
+  : nullableType
+  ;
+
+nullableType
+  : typeDescriptor "?"
+
+selfType
+  : "This"
+  ;
+
+userType
+  : ("namespace" ".")? simpleUserType{"."}
+  ;
+
+simpleUserType
+  : SimpleName ("<" (optionalProjection type | "*"){","} ">")?
+  ;
+
+optionalProjection
+  : varianceAnnotation
+  ;
+
+functionType
+  : (type ".")? "(" (parameter | modifiers /*lazy out ref*/ type){","} ")" "->" type?
+  ;
+
+tupleType
+  : "#" "(" type{","}? ")"
+  : "#" "(" parameter{","} ")" // tuple with named entries, the names do not affect assignment compatibility
+  ;
+
+////////////////////////////////////////

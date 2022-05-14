@@ -1,0 +1,4 @@
+package test
+
+internal var jet.Int.junk : jet.Short
+internal val jet.String.junk : jet.Int

@@ -1,0 +1,78 @@
+== Test ==
+class Test {
+  var x : Int;
+}
+---------------------
+L0:
+    <START>            NEXT:[v(var x : Int;)]    PREV:[]
+    v(var x : Int;)    NEXT:[<END>]              PREV:[<START>]
+L1:
+    <END>              NEXT:[<SINK>]             PREV:[v(var x : Int;)]
+error:
+    <ERROR>            NEXT:[<SINK>]             PREV:[]
+sink:
+    <SINK>             NEXT:[]                   PREV:[<ERROR>, <END>]
+=====================
+== assignments ==
+fun assignments() : Unit {
+    var x = 1
+    x = 2
+    x += 2
+
+    x = if (true) 1 else 2
+
+    val y = true && false
+    val z = false && true
+
+    val t = Test();
+    t.x = 1
+}
+---------------------
+L0:
+    <START>                     NEXT:[v(var x = 1)]                  PREV:[]
+    v(var x = 1)                NEXT:[r(1)]                          PREV:[<START>]
+    r(1)                        NEXT:[w(x)]                          PREV:[v(var x = 1)]
+    w(x)                        NEXT:[r(2)]                          PREV:[r(1)]
+    r(2)                        NEXT:[w(x)]                          PREV:[w(x)]
+    w(x)                        NEXT:[r(x)]                          PREV:[r(2)]
+    r(x)                        NEXT:[r(2)]                          PREV:[w(x)]
+    r(2)                        NEXT:[r(+=)]                         PREV:[r(x)]
+    r(+=)                       NEXT:[w(x)]                          PREV:[r(2)]
+    w(x)                        NEXT:[r(true)]                       PREV:[r(+=)]
+    r(true)                     NEXT:[jf(L2)]                        PREV:[w(x)]
+    jf(L2)                      NEXT:[r(2), r(1)]                    PREV:[r(true)]
+    r(1)                        NEXT:[jmp(L3)]                       PREV:[jf(L2)]
+    jmp(L3)                     NEXT:[w(x)]                          PREV:[r(1)]
+L2:
+    r(2)                        NEXT:[w(x)]                          PREV:[jf(L2)]
+L3:
+    w(x)                        NEXT:[v(val y = true && false)]      PREV:[jmp(L3), r(2)]
+    v(val y = true && false)    NEXT:[r(true)]                       PREV:[w(x)]
+    r(true)                     NEXT:[jf(L4)]                        PREV:[v(val y = true && false)]
+    jf(L4)                      NEXT:[r(true && false), r(false)]    PREV:[r(true)]
+    r(false)                    NEXT:[r(true && false)]              PREV:[jf(L4)]
+L4:
+    r(true && false)            NEXT:[w(y)]                          PREV:[jf(L4), r(false)]
+    w(y)                        NEXT:[v(val z = false && true)]      PREV:[r(true && false)]
+    v(val z = false && true)    NEXT:[r(false)]                      PREV:[w(y)]
+    r(false)                    NEXT:[jf(L5)]                        PREV:[v(val z = false && true)]
+    jf(L5)                      NEXT:[r(false && true), r(true)]     PREV:[r(false)]
+    r(true)                     NEXT:[r(false && true)]              PREV:[jf(L5)]
+L5:
+    r(false && true)            NEXT:[w(z)]                          PREV:[jf(L5), r(true)]
+    w(z)                        NEXT:[v(val t = Test())]             PREV:[r(false && true)]
+    v(val t = Test())           NEXT:[r(Test)]                       PREV:[w(z)]
+    r(Test)                     NEXT:[r(Test())]                     PREV:[v(val t = Test())]
+    r(Test())                   NEXT:[w(t)]                          PREV:[r(Test)]
+    w(t)                        NEXT:[r(1)]                          PREV:[r(Test())]
+    r(1)                        NEXT:[r(t)]                          PREV:[w(t)]
+    r(t)                        NEXT:[r(=)]                          PREV:[r(1)]
+    r(=)                        NEXT:[w(t.x)]                        PREV:[r(t)]
+    w(t.x)                      NEXT:[<END>]                         PREV:[r(=)]
+L1:
+    <END>                       NEXT:[<SINK>]                        PREV:[w(t.x)]
+error:
+    <ERROR>                     NEXT:[<SINK>]                        PREV:[]
+sink:
+    <SINK>                      NEXT:[]                              PREV:[<ERROR>, <END>]
+=====================

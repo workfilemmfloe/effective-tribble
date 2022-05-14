@@ -1,0 +1,5 @@
+package test
+
+public final annotation class SimpleAnnotation : jet.Annotation {
+    public constructor SimpleAnnotation()
+}

@@ -1,0 +1,5 @@
+package test
+
+public open class inner : test.B.C {
+    public constructor inner()
+}

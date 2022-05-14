@@ -1,0 +1,6 @@
+package test
+
+internal final class ExtPropInClass {
+    /*primary*/ public constructor ExtPropInClass()
+    internal final val jet.Int.itIs : jet.Int
+}

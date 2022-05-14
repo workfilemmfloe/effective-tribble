@@ -1,0 +1,6 @@
+package test
+
+internal final class River {
+    /*primary*/ public constructor River()
+    internal final fun song() : jet.Int
+}
