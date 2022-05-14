@@ -1,0 +1,23 @@
+== test ==
+fun test() : Unit {
+    try {
+        test()
+    } catch (any : Exception) {
+        test()
+    } finally {
+        test()
+    }
+}
+---------------------
+                                                                           <v1>: *                NEW: magic[CATCH_FROM_TRY](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v1>
+                                                                           <v2>: {<: Exception}   NEW: magic[FAKE_INITIALIZER](any : Exception) -> <v2>
+                                                                           <v4>: *                NEW: magic[OUT_OF_CATCH](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v4>
+test()                                                                     <v0>: *                NEW: call(test(), test) -> <v0>
+{ test() }                                                                 <v0>: *                COPY
+test()                                                                     <v3>: *                NEW: call(test(), test) -> <v3>
+{ test() }                                                                 <v3>: *                COPY
+test()                                                                     <v5>: *                NEW: call(test(), test) -> <v5>
+{ test() }                                                                 <v5>: *                COPY
+try { test() } catch (any : Exception) { test() } finally { test() }       <v6>: *                NEW: merge(try { test() } catch (any : Exception) { test() } finally { test() }|<v0>, <v3>) -> <v6>
+{ try { test() } catch (any : Exception) { test() } finally { test() } }   <v6>: *                COPY
+=====================
