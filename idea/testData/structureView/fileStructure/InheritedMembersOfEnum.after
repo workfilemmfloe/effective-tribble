@@ -1,0 +1,8 @@
+-InheritedMembersOfEnum.kt
+ -Test
+  compareTo(E): Int location=→Enum
+  equals(Any?): Boolean location=→Enum
+  hashCode(): Int location=→Enum
+  name(): String location=→Enum
+  ordinal(): Int location=→Enum
+  toString(): String location=→Enum
