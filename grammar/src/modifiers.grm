@@ -1,0 +1,46 @@
+/**
+## Modifiers
+*/
+
+modifiers
+  : modifier*
+  ;
+
+modifier
+  : modifierKeyword
+  ;
+
+modifierKeyword
+  : classModifier
+  : accessModifier
+  : varianceAnnotation
+  : memberModifier
+  : annotations
+  ;
+
+classModifier
+  : "abstract"
+  : "final"
+  : "enum"
+  : "open"
+  : "annotation"
+  ;
+
+memberModifier
+  : "override"
+  : "open"
+  : "final"
+  : "abstract"
+  ;
+
+accessModifier
+  : "private"
+  : "protected"
+  : "public"
+  : "internal"
+  ;
+
+varianceAnnotation
+  : "in"
+  : "out"
+  ;
