@@ -1,0 +1,38 @@
+buildscript {
+    ext.kotlin_root = "$rootDir/../../.."
+    apply from: "${kotlin_root}/libraries/versions.gradle"
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_gradle_plugin_version}"
+    }
+}
+
+allprojects {
+    group = 'org.jetbrains.kotlin'
+    version = "$kotlin_version"
+}
+
+apply from: "${kotlin_root}/libraries/commonConfiguration.gradle"
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile) {
+        compilerJarFile = bootstrapCompilerFile
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+    }
+}
+
+task clean {
+    doLast {
+        delete "${buildDir}/repo"
+    }
+}
