@@ -1,0 +1,21 @@
+@kotlin.jvm.internal.KotlinClass A {
+    private @AnnField @AnnParameterField @AnnTypeField field a: int
+    private @AnnField @AnnTypeField field x: int
+    private synthetic deprecated @AnnProperty @AnnFieldProperty @AnnParameterProperty method a$annotations(): void
+    public method getA(): int
+    private synthetic deprecated @AnnProperty @AnnFieldProperty method x$annotations(): void
+    public method getX(): int
+    public method <init>(@AnnParameterProperty @AnnParameterField p0: int): void
+}
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnField
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnFieldProperty
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnParameterField
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnParameterProperty
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnProperty
+
+@kotlin.annotation.Target @java.lang.annotation.Retention @java.lang.annotation.Target @kotlin.jvm.internal.KotlinClass AnnTypeField
