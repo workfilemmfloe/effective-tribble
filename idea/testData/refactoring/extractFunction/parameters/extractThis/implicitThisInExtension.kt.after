@@ -1,0 +1,11 @@
+// PARAM_TYPES: Z
+class Z(val a: Int)
+
+// SIBLING:
+fun Z.foo(): Int {
+    return i() + 1
+}
+
+fun Z.i(): Int {
+    return a
+}

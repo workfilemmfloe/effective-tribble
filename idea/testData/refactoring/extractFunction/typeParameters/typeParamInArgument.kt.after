@@ -1,0 +1,13 @@
+// PARAM_TYPES: Data<T>
+class Data<T>(val t: Int)
+
+// SIBLING:
+class A<T> {
+    fun foo(d: Data<T>): Int {
+        return i(d)
+    }
+}
+
+fun <T> i(d: Data<T>): Int {
+    return d.t + 1
+}

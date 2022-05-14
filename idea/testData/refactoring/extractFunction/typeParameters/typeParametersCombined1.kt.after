@@ -1,0 +1,17 @@
+// PARAM_TYPES: A<T>
+// PARAM_TYPES: A.B<U>
+// PARAM_TYPES: V, Data
+open class Data(val x: Int)
+
+// SIBLING:
+class A<T: Data>(val t: T) {
+    inner class B<U: Data>(val u: U) {
+        fun foo<V: Data>(v: V): Int {
+            return i(this@A, this@B, v)
+        }
+    }
+}
+
+fun <T : Data, U : Data, V : Data> i(a: A<T>, b: A.B<U>, v: V): Int {
+    return a.t.x + b.u.x + v.x
+}
