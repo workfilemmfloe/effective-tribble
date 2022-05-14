@@ -1,0 +1,6 @@
+{
+  "type": "JAVA_METHOD",
+  "classFQN": "testing.JavaClass",
+  "methodSignature": "String foo()",
+  "newName": "bar"
+}
