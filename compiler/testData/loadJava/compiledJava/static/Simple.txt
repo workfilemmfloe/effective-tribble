@@ -1,0 +1,10 @@
+package test
+
+public open class Simple : java.lang.Object {
+    public constructor Simple()
+    public open fun foo(): kotlin.Unit
+}
+
+package test.Simple {
+    public open fun bar(): kotlin.Unit
+}

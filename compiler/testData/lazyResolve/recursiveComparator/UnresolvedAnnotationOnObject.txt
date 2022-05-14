@@ -1,0 +1,11 @@
+package test
+
+internal val some: test.SomeObject
+
+[ERROR : BadAnnotation]() internal object SomeObject {
+    /*primary*/ private constructor SomeObject()
+    
+    public class object <class-object-for-SomeObject> : test.SomeObject {
+        /*primary*/ private constructor <class-object-for-SomeObject>()
+    }
+}
