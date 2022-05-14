@@ -1,0 +1,3 @@
+package test
+
+internal fun ffgg(): kotlin.List<kotlin.CharSequence?>

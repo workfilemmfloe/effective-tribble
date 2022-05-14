@@ -1,0 +1,2 @@
+<!-- nestedClassAcessedViaInstanceReference2 -->
+Nested companion object 'Companion' accessed via instance reference
