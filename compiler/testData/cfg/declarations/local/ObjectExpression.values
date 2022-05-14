@@ -1,0 +1,34 @@
+== A ==
+trait A {
+    fun foo() : Int
+}
+---------------------
+=====================
+== foo ==
+fun foo() : Int
+---------------------
+=====================
+== B ==
+class B : A {
+    override fun foo() = 10
+}
+---------------------
+=====================
+== foo ==
+override fun foo() = 10
+---------------------
+10   <v0>: Int   NEW: r(10) -> <v0>
+=====================
+== foo ==
+fun foo(b: B) : Int {
+    val o = object : A by b {}
+    return o.foo()
+}
+---------------------
+                     <v0>: B                    NEW: magic(b: B) -> <v0>          
+b                    <v1>: *                    NEW: r(b) -> <v1>                 
+object : A by b {}   <v2>: <no name provided>   NEW: r(object : A by b {}) -> <v2>
+o                    <v3>: {<: A}               NEW: r(o) -> <v3>                 
+foo()                <v4>: Int                  NEW: call(foo, foo|<v3>) -> <v4>  
+o.foo()              <v4>: Int                  COPY                              
+=====================
