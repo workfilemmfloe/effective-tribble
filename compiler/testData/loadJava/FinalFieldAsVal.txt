@@ -1,0 +1,6 @@
+namespace test
+
+public final class test.FinalFieldAsVal : java.lang.Object {
+    public final /*constructor*/ fun <init>(): test.FinalFieldAsVal
+    public final val f: jet.Int
+}

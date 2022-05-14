@@ -1,0 +1,61 @@
+== AnonymousInitializers ==
+class AnonymousInitializers() {
+    val k = 34
+
+    val i: Int
+    {
+        $i = 12
+    }
+
+    val j: Int
+       get() = 20
+
+    {
+        $i = 13
+    }
+}
+---------------------
+l0:
+    <START>               NEXT:[v(val k = 34)]                PREV:[]
+    v(val k = 34)         NEXT:[r(34)]                        PREV:[<START>]
+    r(34)                 NEXT:[w(k)]                         PREV:[v(val k = 34)]
+    w(k)                  NEXT:[v(val i: Int)]                PREV:[r(34)]
+    v(val i: Int)         NEXT:[r(12)]                        PREV:[w(k)]
+    r(12)                 NEXT:[w($i)]                        PREV:[v(val i: Int)]
+    w($i)                 NEXT:[v(val j: Int get() = 20) ]    PREV:[r(12)]
+    v(val j: Int      
+           get() = 20)    NEXT:[jmp?(l2)]                     PREV:[w($i)]
+    jmp?(l2)              NEXT:[r(13), d(get() = 20)]         PREV:[v(val j: Int get() = 20) ]
+    d(get() = 20)         NEXT:[<SINK>]                       PREV:[jmp?(l2)]
+l2:
+    r(13)                 NEXT:[w($i)]                        PREV:[jmp?(l2)]
+    w($i)                 NEXT:[<END>]                        PREV:[r(13)]
+l1:
+    <END>                 NEXT:[<SINK>]                       PREV:[w($i)]
+error:
+    <ERROR>               NEXT:[<SINK>]                       PREV:[]
+sink:
+    <SINK>                NEXT:[]                             PREV:[<ERROR>, <END>, d(get() = 20)]
+l3:
+    <START>    NEXT:[r(20)]     PREV:[]
+    r(20)      NEXT:[<END>]     PREV:[<START>]
+l4:
+    <END>      NEXT:[<SINK>]    PREV:[r(20)]
+error:
+    <ERROR>    NEXT:[<SINK>]    PREV:[]
+sink:
+    <SINK>     NEXT:[]          PREV:[<ERROR>, <END>]
+=====================
+== get_j ==
+get() = 20
+---------------------
+l3:
+    <START>    NEXT:[r(20)]     PREV:[]
+    r(20)      NEXT:[<END>]     PREV:[<START>]
+l4:
+    <END>      NEXT:[<SINK>]    PREV:[r(20)]
+error:
+    <ERROR>    NEXT:[<SINK>]    PREV:[]
+sink:
+    <SINK>     NEXT:[]          PREV:[<ERROR>, <END>]
+=====================

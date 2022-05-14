@@ -1,0 +1,7 @@
+namespace test
+
+internal abstract trait test.Aaa</*0*/ P : jet.Any?> : jet.Any {
+}
+internal final class test.Bbb : test.Aaa<java.util.Random> {
+    public final /*constructor*/ fun <init>(): test.Bbb
+}

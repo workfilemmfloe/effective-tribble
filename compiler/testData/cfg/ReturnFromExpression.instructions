@@ -1,0 +1,21 @@
+== blockAndAndMismatch ==
+fun blockAndAndMismatch() : Boolean {
+  false || (return false)
+}
+---------------------
+l0:
+    <START>                       NEXT:[r(false)]                                         PREV:[]
+    r(false)                      NEXT:[jt(l2)]                                           PREV:[<START>]
+    jt(l2)                        NEXT:[r((return false)), r(false || (return false))]    PREV:[r(false)]
+    r((return false))             NEXT:[r(false)]                                         PREV:[jt(l2)]
+    r(false)                      NEXT:[ret(*) l1]                                        PREV:[r((return false))]
+    ret(*) l1                     NEXT:[<END>]                                            PREV:[r(false)]
+l2:
+    r(false || (return false))    NEXT:[<END>]                                            PREV:[jt(l2)]
+l1:
+    <END>                         NEXT:[<SINK>]                                           PREV:[ret(*) l1, r(false || (return false))]
+error:
+    <ERROR>                       NEXT:[<SINK>]                                           PREV:[]
+sink:
+    <SINK>                        NEXT:[]                                                 PREV:[<ERROR>, <END>]
+=====================

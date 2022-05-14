@@ -1,0 +1,13 @@
+== empty ==
+fun empty() {}
+---------------------
+l0:
+    <START>        NEXT:[read (Unit)]    PREV:[]
+    read (Unit)    NEXT:[<END>]          PREV:[<START>]
+l1:
+    <END>          NEXT:[<SINK>]         PREV:[read (Unit)]
+error:
+    <ERROR>        NEXT:[<SINK>]         PREV:[]
+sink:
+    <SINK>         NEXT:[]               PREV:[<ERROR>, <END>]
+=====================

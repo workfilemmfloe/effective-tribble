@@ -1,0 +1,8 @@
+namespace test
+
+public open class test.InnerClass : java.lang.Object {
+    public final /*constructor*/ fun <init>(): test.InnerClass
+    public open class test.InnerClass.Inner : java.lang.Object {
+        public final /*constructor*/ fun <init>(): test.InnerClass.Inner
+    }
+}

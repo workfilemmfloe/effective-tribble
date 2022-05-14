@@ -1,0 +1,6 @@
+namespace test
+
+public open class test.JavaBeanVal : java.lang.Object {
+    public final /*constructor*/ fun <init>(): test.JavaBeanVal
+    public open fun getColor(): jet.String?
+}

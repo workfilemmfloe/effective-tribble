@@ -1,0 +1,5 @@
+namespace test
+
+public final class test.ClassWithTypePP</*0*/ P : jet.Any?, /*1*/ Q : P> : java.lang.Object {
+    public final /*constructor*/ fun </*0*/ P : jet.Any?, /*1*/ Q : P><init>(): test.ClassWithTypePP<P, Q>
+}

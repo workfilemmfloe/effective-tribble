@@ -1,0 +1,138 @@
+== f ==
+fun f(a : Boolean) : Unit {
+    1
+    a
+    2.toLong()
+    foo(a, 3)
+    genfun<Any>()
+    flfun {1}
+    3.equals(4)
+
+    3 equals 4
+
+    1 + 2
+
+    a && true
+    a || false
+
+}
+---------------------
+l0:
+    <START>             NEXT:[v(a : Boolean)]             PREV:[]
+    v(a : Boolean)      NEXT:[w(a)]                       PREV:[<START>]
+    w(a)                NEXT:[r(1)]                       PREV:[v(a : Boolean)]
+    r(1)                NEXT:[r(a)]                       PREV:[w(a)]
+    r(a)                NEXT:[r(2)]                       PREV:[r(1)]
+    r(2)                NEXT:[r(toLong)]                  PREV:[r(a)]
+    r(toLong)           NEXT:[r(toLong())]                PREV:[r(2)]
+    r(toLong())         NEXT:[r(2.toLong())]              PREV:[r(toLong)]
+    r(2.toLong())       NEXT:[r(a)]                       PREV:[r(toLong())]
+    r(a)                NEXT:[r(3)]                       PREV:[r(2.toLong())]
+    r(3)                NEXT:[r(foo)]                     PREV:[r(a)]
+    r(foo)              NEXT:[r(foo(a, 3))]               PREV:[r(3)]
+    r(foo(a, 3))        NEXT:[r(genfun)]                  PREV:[r(foo)]
+    r(genfun)           NEXT:[r(genfun<Any>())]           PREV:[r(foo(a, 3))]
+    r(genfun<Any>())    NEXT:[jmp?(l2)]                   PREV:[r(genfun)]
+    jmp?(l2)            NEXT:[r({1}), d({1})]             PREV:[r(genfun<Any>())]
+    d({1})              NEXT:[<SINK>]                     PREV:[jmp?(l2)]
+l2:
+    r({1})              NEXT:[r(flfun)]                   PREV:[jmp?(l2)]
+    r(flfun)            NEXT:[r(flfun {1})]               PREV:[r({1})]
+    r(flfun {1})        NEXT:[r(3)]                       PREV:[r(flfun)]
+    r(3)                NEXT:[r(4)]                       PREV:[r(flfun {1})]
+    r(4)                NEXT:[r(equals)]                  PREV:[r(3)]
+    r(equals)           NEXT:[r(equals(4))]               PREV:[r(4)]
+    r(equals(4))        NEXT:[r(3.equals(4))]             PREV:[r(equals)]
+    r(3.equals(4))      NEXT:[r(3)]                       PREV:[r(equals(4))]
+    r(3)                NEXT:[r(4)]                       PREV:[r(3.equals(4))]
+    r(4)                NEXT:[r(equals)]                  PREV:[r(3)]
+    r(equals)           NEXT:[r(3 equals 4)]              PREV:[r(4)]
+    r(3 equals 4)       NEXT:[r(1)]                       PREV:[r(equals)]
+    r(1)                NEXT:[r(2)]                       PREV:[r(3 equals 4)]
+    r(2)                NEXT:[r(+)]                       PREV:[r(1)]
+    r(+)                NEXT:[r(1 + 2)]                   PREV:[r(2)]
+    r(1 + 2)            NEXT:[r(a)]                       PREV:[r(+)]
+    r(a)                NEXT:[jf(l5)]                     PREV:[r(1 + 2)]
+    jf(l5)              NEXT:[r(a && true), r(true)]      PREV:[r(a)]
+    r(true)             NEXT:[r(a && true)]               PREV:[jf(l5)]
+l5:
+    r(a && true)        NEXT:[r(a)]                       PREV:[jf(l5), r(true)]
+    r(a)                NEXT:[jt(l6)]                     PREV:[r(a && true)]
+    jt(l6)              NEXT:[r(false), r(a || false)]    PREV:[r(a)]
+    r(false)            NEXT:[r(a || false)]              PREV:[jt(l6)]
+l6:
+    r(a || false)       NEXT:[<END>]                      PREV:[jt(l6), r(false)]
+l1:
+    <END>               NEXT:[<SINK>]                     PREV:[r(a || false)]
+error:
+    <ERROR>             NEXT:[<SINK>]                     PREV:[]
+sink:
+    <SINK>              NEXT:[]                           PREV:[<ERROR>, <END>, d({1})]
+l3:
+    <START>    NEXT:[r(1)]      PREV:[]
+    r(1)       NEXT:[<END>]     PREV:[<START>]
+l4:
+    <END>      NEXT:[<SINK>]    PREV:[r(1)]
+error:
+    <ERROR>    NEXT:[<SINK>]    PREV:[]
+sink:
+    <SINK>     NEXT:[]          PREV:[<ERROR>, <END>]
+=====================
+== anonymous_0 ==
+{1}
+---------------------
+l3:
+    <START>    NEXT:[r(1)]      PREV:[]
+    r(1)       NEXT:[<END>]     PREV:[<START>]
+l4:
+    <END>      NEXT:[<SINK>]    PREV:[r(1)]
+error:
+    <ERROR>    NEXT:[<SINK>]    PREV:[]
+sink:
+    <SINK>     NEXT:[]          PREV:[<ERROR>, <END>]
+=====================
+== foo ==
+fun foo(a : Boolean, b : Int) : Unit {}
+---------------------
+l0:
+    <START>           NEXT:[v(a : Boolean)]    PREV:[]
+    v(a : Boolean)    NEXT:[w(a)]              PREV:[<START>]
+    w(a)              NEXT:[v(b : Int)]        PREV:[v(a : Boolean)]
+    v(b : Int)        NEXT:[w(b)]              PREV:[w(a)]
+    w(b)              NEXT:[read (Unit)]       PREV:[v(b : Int)]
+    read (Unit)       NEXT:[<END>]             PREV:[w(b)]
+l1:
+    <END>             NEXT:[<SINK>]            PREV:[read (Unit)]
+error:
+    <ERROR>           NEXT:[<SINK>]            PREV:[]
+sink:
+    <SINK>            NEXT:[]                  PREV:[<ERROR>, <END>]
+=====================
+== genfun ==
+fun genfun<T>() : Unit {}
+---------------------
+l0:
+    <START>        NEXT:[read (Unit)]    PREV:[]
+    read (Unit)    NEXT:[<END>]          PREV:[<START>]
+l1:
+    <END>          NEXT:[<SINK>]         PREV:[read (Unit)]
+error:
+    <ERROR>        NEXT:[<SINK>]         PREV:[]
+sink:
+    <SINK>         NEXT:[]               PREV:[<ERROR>, <END>]
+=====================
+== flfun ==
+fun flfun(f : () -> Any) : Unit {}
+---------------------
+l0:
+    <START>             NEXT:[v(f : () -> Any)]    PREV:[]
+    v(f : () -> Any)    NEXT:[w(f)]                PREV:[<START>]
+    w(f)                NEXT:[read (Unit)]         PREV:[v(f : () -> Any)]
+    read (Unit)         NEXT:[<END>]               PREV:[w(f)]
+l1:
+    <END>               NEXT:[<SINK>]              PREV:[read (Unit)]
+error:
+    <ERROR>             NEXT:[<SINK>]              PREV:[]
+sink:
+    <SINK>              NEXT:[]                    PREV:[<ERROR>, <END>]
+=====================
