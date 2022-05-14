@@ -1,0 +1,158 @@
+/*
+ * Copyright 2010-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.jetbrains.kotlin.psi
+
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
+import com.intellij.psi.*
+import com.intellij.psi.impl.PsiManagerEx
+import com.intellij.psi.impl.source.tree.FileElement
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.tree.IElementType
+import com.intellij.testFramework.LightVirtualFile
+import org.jetbrains.kotlin.idea.KotlinFileType
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.utils.addToStdlib.check
+import java.util.*
+
+abstract class KtCodeFragment(
+        private val _project: Project,
+        name: String,
+        text: CharSequence,
+        imports: String?, // Should be separated by JetCodeFragment.IMPORT_SEPARATOR
+        elementType: IElementType,
+        private val context: PsiElement?
+): KtFile((PsiManager.getInstance(_project) as PsiManagerEx).fileManager.createFileViewProvider(LightVirtualFile(name, KotlinFileType.INSTANCE, text), true), false), JavaCodeFragment {
+
+    private var viewProvider = super<KtFile>.getViewProvider() as SingleRootFileViewProvider
+    private var imports = LinkedHashSet<String>()
+
+    init {
+        getViewProvider().forceCachedPsi(this)
+        init(TokenType.CODE_FRAGMENT, elementType)
+        if (context != null) {
+            initImports(imports)
+        }
+    }
+
+    private var resolveScope: GlobalSearchScope? = null
+    private var thisType: PsiType? = null
+    private var superType: PsiType? = null
+    private var exceptionHandler: JavaCodeFragment.ExceptionHandler? = null
+
+    abstract fun getContentElement(): KtElement?
+
+    override fun forceResolveScope(scope: GlobalSearchScope?) {
+        resolveScope = scope
+    }
+
+    override fun getForcedResolveScope() = resolveScope
+
+    override fun isPhysical() = true
+
+    override fun isValid() = true
+
+    override fun getContext() = context
+
+    override fun getResolveScope() = context?.resolveScope ?: super<KtFile>.getResolveScope()
+
+    override fun clone(): KtCodeFragment {
+        val clone = cloneImpl(calcTreeElement().clone() as FileElement) as KtCodeFragment
+        clone.originalFile = this
+        clone.imports = imports
+        clone.viewProvider = SingleRootFileViewProvider(PsiManager.getInstance(_project), LightVirtualFile(name, KotlinFileType.INSTANCE, text), true)
+        clone.viewProvider.forceCachedPsi(clone)
+        return clone
+    }
+
+    override fun getViewProvider() = viewProvider
+
+    override fun getThisType() = thisType
+
+    override fun setThisType(psiType: PsiType?) {
+        thisType = psiType
+    }
+
+    override fun getSuperType() = superType
+
+    override fun setSuperType(superType: PsiType?) {
+        this.superType = superType
+    }
+
+    override fun importsToString(): String {
+        return imports.joinToString(IMPORT_SEPARATOR)
+    }
+
+    override fun addImportsFromString(imports: String?) {
+        if (imports == null || imports.isEmpty()) return
+        this.imports.addAll(imports.split(IMPORT_SEPARATOR))
+
+        // we need this code to force re-highlighting, otherwise it does not work by some reason
+        val tempElement = KtPsiFactory(project).createColon()
+        add(tempElement).delete()
+    }
+
+    fun importsAsImportList(): KtImportList? {
+        if (!imports.isEmpty() && context != null) {
+            return KtPsiFactory(this).createAnalyzableFile("imports_for_codeFragment.kt", imports.joinToString("\n"), context).importList
+        }
+        return null
+    }
+
+    override fun getImportDirectives(): List<KtImportDirective> {
+        return importsAsImportList()?.imports ?: emptyList()
+    }
+
+    override fun setVisibilityChecker(checker: JavaCodeFragment.VisibilityChecker?) { }
+
+    override fun getVisibilityChecker() = JavaCodeFragment.VisibilityChecker.EVERYTHING_VISIBLE
+
+    override fun setExceptionHandler(checker: JavaCodeFragment.ExceptionHandler?) {
+        exceptionHandler = checker
+    }
+
+    override fun getExceptionHandler() = exceptionHandler
+
+    override fun importClass(aClass: PsiClass?): Boolean {
+        return true
+    }
+
+    fun getContextContainingFile(): KtFile? {
+        return (getOriginalContext() as? KtElement)?.getContainingKtFile()
+    }
+
+    fun getOriginalContext(): KtElement? {
+        val contextElement = getContext() as? KtElement
+        val contextFile = contextElement?.getContainingKtFile()
+        if (contextFile is KtCodeFragment) {
+            return contextFile.getOriginalContext()
+        }
+        return contextElement
+    }
+
+    private fun initImports(imports: String?) {
+        if (imports != null && !imports.isEmpty()) {
+            this.imports.addAll(imports.split(IMPORT_SEPARATOR).map { it.check { it.startsWith("import ") } ?: "import $it" })
+        }
+    }
+
+    companion object {
+        val IMPORT_SEPARATOR: String = ","
+        val RUNTIME_TYPE_EVALUATOR: Key<Function1<KtExpression, KotlinType?>> = Key.create("RUNTIME_TYPE_EVALUATOR")
+        val ADDITIONAL_CONTEXT_FOR_LAMBDA: Key<Function0<KtElement?>> = Key.create("ADDITIONAL_CONTEXT_FOR_LAMBDA")
+    }
+}
