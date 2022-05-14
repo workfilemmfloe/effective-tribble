@@ -1,0 +1,6 @@
+name
+	type=java-production
+	outputDir=out
+	sources=[foo]
+	classpath=[bar]
+	annotations=[baz]

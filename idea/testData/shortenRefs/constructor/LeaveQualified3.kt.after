@@ -1,0 +1,6 @@
+import java.util
+
+fun foo(){
+    val Random = {}
+    val x = util.Random()
+}
