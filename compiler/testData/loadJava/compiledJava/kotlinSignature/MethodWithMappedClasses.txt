@@ -1,0 +1,6 @@
+package test
+
+public open class MethodWithMappedClasses {
+    public constructor MethodWithMappedClasses()
+    public open fun </*0*/ T> copy(/*0*/ dest: kotlin.(Mutable)List<in T!>!, /*1*/ src: kotlin.(Mutable)List<T!>!): kotlin.Unit
+}

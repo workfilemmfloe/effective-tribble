@@ -1,0 +1,9 @@
+package test
+
+internal var property: kotlin.Int
+    internal fun <get-property>(): kotlin.Int
+    test.Anno() internal fun <set-property>(/*0*/ value: kotlin.Int): kotlin.Unit
+
+internal final annotation class Anno : kotlin.Annotation {
+    /*primary*/ public constructor Anno()
+}

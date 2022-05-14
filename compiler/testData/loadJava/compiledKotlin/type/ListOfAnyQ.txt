@@ -1,0 +1,3 @@
+package test
+
+internal fun listOfAnyQ(): kotlin.List<kotlin.Any?>
