@@ -1,0 +1,2097 @@
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude" version="2" url="http://kotlinlang.org" allow-bundled-update="true">
+    <id>org.jetbrains.kotlin</id>
+
+  <name>Kotlin</name>
+  <description>Kotlin language support</description>
+  <version>@snapshot@</version>
+  <vendor url="http://www.jetbrains.com">JetBrains s.r.o.</vendor>
+
+  <idea-version since-build="145.257" until-build="172.*"/>
+
+  <depends>com.intellij.modules.java</depends>
+
+  <depends optional="true" config-file="junit.xml">JUnit</depends>
+  <depends optional="true" config-file="gradle.xml">org.jetbrains.plugins.gradle</depends>
+  <depends optional="true" config-file="maven.xml">org.jetbrains.idea.maven</depends>
+  <depends optional="true" config-file="testng-j.xml">TestNG-J</depends>
+  <depends optional="true" config-file="kotlin-copyright.xml">com.intellij.copyright</depends>
+  <depends optional="true" config-file="javaScriptDebug.xml">JavaScriptDebugger</depends>
+  <depends optional="true" config-file="android.xml">org.jetbrains.android</depends>
+  <depends optional="true" config-file="coverage.xml">Coverage</depends>
+  <depends optional="true" config-file="i18n.xml">com.intellij.java-i18n</depends>
+  <depends optional="true" config-file="injection.xml">org.intellij.intelliLang</depends>
+  <depends optional="true" config-file="decompiler.xml">org.jetbrains.java.decompiler</depends>
+
+  <!-- ULTIMATE-PLUGIN-PLACEHOLDER -->
+
+  <project-components>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.compiler.KotlinCompilerManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.configuration.ui.KotlinConfigurationCheckerComponent</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.highlighter.KotlinBeforeResolveHighlightingPass$Factory</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.completion.LookupCancelWatcher</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.project.KotlinCodeBlockModificationListener</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.facet.FacetConfigurator</implementation-class>
+    </component>
+  </project-components>
+
+  <application-components>
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.PluginStartupComponent</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>org.jetbrains.kotlin.idea.versions.KotlinUpdatePluginComponent</implementation-class>
+    </component>
+
+  </application-components>
+
+  <actions>
+    <action id="Kotlin.NewFile" class="org.jetbrains.kotlin.idea.actions.NewKotlinFileAction">
+      <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewGroup1"/>
+    </action>
+
+    <action id="ConvertJavaToKotlin" class="org.jetbrains.kotlin.idea.actions.JavaToKotlinAction"
+            text="Convert Java File to Kotlin File">
+      <keyboard-shortcut keymap="$default" first-keystroke="control alt shift K"/>
+      <add-to-group group-id="CodeMenu" anchor="last"/>
+    </action>
+
+    <group id="KotlinToolsGroup" popup="true" text="Kotlin" icon="/org/jetbrains/kotlin/idea/icons/kotlin13.png"
+           class="org.jetbrains.kotlin.idea.actions.KotlinActionGroup">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </group>
+
+    <action id="ConfigureKotlinInProject" class="org.jetbrains.kotlin.idea.actions.ConfigureKotlinJavaInProjectAction"
+            text="Configure Kotlin in Project">
+      <add-to-group group-id="KotlinToolsGroup"/>
+    </action>
+
+    <action id="ConfigureKotlinJsInProject" class="org.jetbrains.kotlin.idea.actions.ConfigureKotlinJsInProjectAction"
+            text="Configure Kotlin (JavaScript) in Project">
+      <add-to-group group-id="KotlinToolsGroup"/>
+    </action>
+
+    <action id="KotlinConfigureUpdates" class="org.jetbrains.kotlin.idea.actions.ConfigurePluginUpdatesAction"
+            text="Configure Kotlin Plugin Updates"
+            description="Configure automatic updates for the Kotlin plugin">
+      <add-to-group group-id="KotlinToolsGroup"/>
+    </action>
+
+    <action id="ShowKotlinBytecode" class="org.jetbrains.kotlin.idea.actions.ShowKotlinBytecodeAction"
+            text="Show Kotlin Bytecode">
+      <add-to-group group-id="KotlinToolsGroup"/>
+    </action>
+
+    <action id="DecompileKotlinToJava" class="org.jetbrains.kotlin.idea.actions.DecompileKotlinToJavaAction"
+            text="Decompile Kotlin To Java">
+      <add-to-group group-id="KotlinToolsGroup"/>
+    </action>
+
+    <action id="ExtractFunction" class="org.jetbrains.kotlin.idea.refactoring.introduce.extractFunction.ExtractFunctionAction"
+            text="_Function..." use-shortcut-of="ExtractMethod">
+      <add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="ExtractMethod"/>
+    </action>
+
+    <action id="IntroduceProperty" class="org.jetbrains.kotlin.idea.refactoring.introduce.introduceProperty.IntroducePropertyAction"
+            text="P_roperty..." use-shortcut-of="IntroduceField">
+      <add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="IntroduceField"/>
+    </action>
+
+    <action id="CopyAsDiagnosticTest" class="org.jetbrains.kotlin.idea.actions.internal.CopyAsDiagnosticTestAction"
+            text="Copy Current File As Diagnostic Test">
+      <keyboard-shortcut keymap="$default" first-keystroke="control alt shift T"/>
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="CheckPartialBodyResolve" class="org.jetbrains.kotlin.idea.actions.internal.CheckPartialBodyResolveAction"
+            text="Check Partial Body Resolve">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="PrintOutNotPropertyMatches" class="org.jetbrains.kotlin.idea.actions.internal.SearchNotPropertyCandidatesAction"
+            text="Search Not Property Candidates">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="FindImplicitNothingAction" class="org.jetbrains.kotlin.idea.actions.internal.FindImplicitNothingAction"
+            text="Find Implicit Nothing Calls">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="CheckComponentsUsageSearchAction" class="org.jetbrains.kotlin.idea.actions.internal.CheckComponentsUsageSearchAction"
+            text="Check Component Functions Usage Search">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="KotlinInternalMode" class="org.jetbrains.kotlin.idea.actions.internal.KotlinInternalModeToggleAction">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="StoredExceptionsThrowToggleAction" class="org.jetbrains.kotlin.idea.actions.internal.StoredExceptionsThrowToggleAction"
+            text="Throw cached PCE">
+    </action>
+
+    <action id="CreateIncrementalCompilationBackup" class="org.jetbrains.kotlin.idea.internal.makeBackup.CreateIncrementalCompilationBackup">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="ExtractFunctionToScope" class="org.jetbrains.kotlin.idea.refactoring.introduce.extractFunction.ExtractFunctionToScopeAction"
+            text="Function to _Scope...">
+      <keyboard-shortcut keymap="$default" first-keystroke="control alt shift M"/>
+      <add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="ExtractFunction"/>
+    </action>
+
+    <action id="IntroduceTypeParameter" class="org.jetbrains.kotlin.idea.refactoring.introduce.introduceTypeParameter.IntroduceTypeParameterAction"
+            text="T_ype Parameter...">
+      <add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="ExtractFunctionToScope"/>
+    </action>
+
+    <action id="IntroduceTypeAlias" class="org.jetbrains.kotlin.idea.refactoring.introduce.introduceTypeAlias.IntroduceTypeAliasAction"
+            text="Type _Alias...">
+      <keyboard-shortcut keymap="$default" first-keystroke="control alt shift A"/>
+      <add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="IntroduceTypeParameter"/>
+    </action>
+
+    <!-- Kotlin Console REPL-->
+    <action id="KotlinConsoleREPL" class="org.jetbrains.kotlin.console.actions.RunKotlinConsoleAction"
+            text="Kotlin REPL"
+            icon="/org/jetbrains/kotlin/idea/icons/kotlin_launch_configuration.png">
+      <add-to-group group-id="KotlinToolsGroup" anchor="last"/>
+    </action>
+
+    <action id="KotlinShellExecute" class="com.intellij.openapi.actionSystem.EmptyAction"
+            text="Execute Kotlin Code"
+            description="Execute Kotlin code in console">
+      <keyboard-shortcut first-keystroke="control ENTER" keymap="$default"/>
+    </action>
+
+    <group id="KotlinGenerateGroup">
+      <action id="KotlinGenerateTestMethod"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateTestSupportActionBase$Test"
+              text="Test Function" />
+      <action id="KotlinGenerateSetUpMethod"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateTestSupportActionBase$SetUp"
+              text="SetUp Function" />
+      <action id="KotlinGenerateTearDownMethod"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateTestSupportActionBase$TearDown"
+              text="TearDown Function" />
+      <action id="KotlinGenerateDataMethod"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateTestSupportActionBase$Data"
+              text="Parameters Function" />
+      <separator />
+      <action id="KotlinGenerateSecondaryConstructor"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateSecondaryConstructorAction"
+              text="Secondary Constructor" />
+      <action id="KotlinGenerateEqualsAndHashCode"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateEqualsAndHashcodeAction"
+              text="equals() and hashCode()" />
+      <action id="KotlinGenerateToString"
+              class="org.jetbrains.kotlin.idea.actions.generate.KotlinGenerateToStringAction"
+              text="toString()" />
+
+      <add-to-group group-id="GenerateGroup" anchor="first"/>
+    </group>
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="org.jetbrains.kotlin.psi.stubs.elements.StubIndexService"
+                        serviceImplementation="org.jetbrains.kotlin.idea.stubindex.IdeStubIndexService"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache"
+                        serviceImplementation="org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.configuration.KotlinModuleTypeManager"
+                        serviceImplementation="org.jetbrains.kotlin.idea.KotlinModuleTypeManagerImpl"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.quickfix.QuickFixes"
+                        serviceImplementation="org.jetbrains.kotlin.idea.quickfix.QuickFixes"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.caches.FileAttributeService"
+                        serviceImplementation="org.jetbrains.kotlin.idea.caches.FileAttributeServiceImpl"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.KotlinPluginUpdater"
+                        serviceImplementation="org.jetbrains.kotlin.idea.KotlinPluginUpdater"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.util.ImportInsertHelper"
+                    serviceImplementation="org.jetbrains.kotlin.util.ImportInsertHelperImpl"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.psi.KotlinDeclarationNavigationPolicy"
+                        serviceImplementation="org.jetbrains.kotlin.idea.decompiler.navigation.KotlinDeclarationNavigationPolicyImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.caches.resolve.KotlinCacheService"
+                    serviceImplementation="org.jetbrains.kotlin.idea.caches.resolve.KotlinCacheServiceImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.load.kotlin.MetadataFinderFactory"
+                    serviceImplementation="org.jetbrains.kotlin.idea.vfilefinder.JvmIDEVirtualFileFinderFactory"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory"
+                    serviceImplementation="org.jetbrains.kotlin.idea.vfilefinder.JvmIDEVirtualFileFinderFactory"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.vfilefinder.JsVirtualFileFinderFactory"
+                    serviceImplementation="org.jetbrains.kotlin.idea.vfilefinder.JsIDEVirtualFileFinderFactory"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager"
+                    serviceImplementation="org.jetbrains.kotlin.idea.util.IdeModuleVisibilityManagerImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.asJava.LightClassGenerationSupport"
+                    serviceImplementation="org.jetbrains.kotlin.idea.caches.resolve.IDELightClassGenerationSupport"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.psi.KtFileClassProvider"
+                    serviceImplementation="org.jetbrains.kotlin.idea.caches.resolve.KtFileClassProviderImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.resolve.CodeAnalyzerInitializer"
+                    serviceImplementation="org.jetbrains.kotlin.resolve.DummyCodeAnalyzerInitializer"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.script.KotlinScriptDefinitionProvider"
+                    serviceImplementation="org.jetbrains.kotlin.script.KotlinScriptDefinitionProvider"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.script.KotlinScriptExternalImportsProvider"
+                    serviceImplementation="org.jetbrains.kotlin.script.KotlinScriptExternalImportsProvider"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.core.script.KotlinScriptConfigurationManager"
+                    serviceImplementation="org.jetbrains.kotlin.idea.core.script.KotlinScriptConfigurationManager"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCommonCompilerArgumentsHolder"
+                    serviceImplementation="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCommonCompilerArgumentsHolder"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.compiler.configuration.Kotlin2JvmCompilerArgumentsHolder"
+                    serviceImplementation="org.jetbrains.kotlin.idea.compiler.configuration.Kotlin2JvmCompilerArgumentsHolder"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.compiler.configuration.Kotlin2JsCompilerArgumentsHolder"
+                    serviceImplementation="org.jetbrains.kotlin.idea.compiler.configuration.Kotlin2JsCompilerArgumentsHolder"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCompilerSettings"
+                    serviceImplementation="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCompilerSettings"/>
+
+    <projectService serviceImplementation="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCompilerWorkspaceSettings"/>
+
+    <projectService serviceImplementation="org.jetbrains.kotlin.idea.versions.SuppressNotificationState"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade$FacadeStubCache"
+                    serviceImplementation="org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade$FacadeStubCache"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.debugger.evaluate.KotlinDebuggerCaches"
+                    serviceImplementation="org.jetbrains.kotlin.idea.debugger.evaluate.KotlinDebuggerCaches"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactoryService"
+                    serviceImplementation="org.jetbrains.kotlin.idea.stubindex.resolve.PluginDeclarationProviderFactoryService"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.stubindex.SubpackagesIndexService"
+                    serviceImplementation="org.jetbrains.kotlin.idea.stubindex.SubpackagesIndexService"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.caches.resolve.LibraryModificationTracker"
+                    serviceImplementation="org.jetbrains.kotlin.idea.caches.resolve.LibraryModificationTracker"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.core.script.ScriptDependenciesModificationTracker"
+                    serviceImplementation="org.jetbrains.kotlin.idea.core.script.ScriptDependenciesModificationTracker"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.resolve.jvm.KotlinJavaPsiFacade"
+                    serviceImplementation="org.jetbrains.kotlin.resolve.jvm.KotlinJavaPsiFacade"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.caches.resolve.ClsJavaStubByVirtualFileCache"
+                    serviceImplementation="org.jetbrains.kotlin.idea.caches.resolve.ClsJavaStubByVirtualFileCache"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.console.KotlinConsoleKeeper"
+                    serviceImplementation="org.jetbrains.kotlin.console.KotlinConsoleKeeper"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.analyzer.LanguageSettingsProvider"
+                    serviceImplementation="org.jetbrains.kotlin.idea.compiler.LanguageVersionSettingsProviderImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.config.KotlinFacetSettingsProvider"
+                    serviceImplementation="org.jetbrains.kotlin.idea.facet.KotlinFacetSettingsProviderImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.core.NotPropertiesService"
+                    serviceImplementation="org.jetbrains.kotlin.idea.intentions.NotPropertiesServiceImpl"/>
+
+    <projectService serviceInterface="org.jetbrains.kotlin.idea.kdoc.SampleResolutionService"
+                    serviceImplementation="org.jetbrains.kotlin.idea.kdoc.IdeSampleResolutionService"/>
+
+    <errorHandler implementation="org.jetbrains.kotlin.idea.reporter.KotlinReportSubmitter"/>
+
+    <internalFileTemplate name="Kotlin File"/>
+    <internalFileTemplate name="Kotlin Class"/>
+    <internalFileTemplate name="Kotlin Enum"/>
+    <internalFileTemplate name="Kotlin Interface"/>
+
+    <gotoSymbolContributor implementation="org.jetbrains.kotlin.idea.goto.KotlinGotoSymbolContributor"/>
+    <gotoClassContributor implementation="org.jetbrains.kotlin.idea.goto.KotlinGotoClassContributor"/>
+    <searchEverywhereClassifier implementation="org.jetbrains.kotlin.idea.goto.KotlinSearchEverywhereClassifier"/>
+    <lang.importOptimizer language="kotlin" implementationClass="org.jetbrains.kotlin.idea.imports.KotlinImportOptimizer"/>
+    <lang.namesValidator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.refactoring.KotlinNamesValidator"/>
+
+    <fileTypeFactory implementation="org.jetbrains.kotlin.idea.KotlinFileTypeFactory"/>
+    <fileTypeFactory implementation="org.jetbrains.kotlin.idea.KotlinJavaScriptMetaFileTypeFactory"/>
+    <fileTypeFactory implementation="org.jetbrains.kotlin.idea.KotlinBuiltInFileTypeFactory"/>
+    <fileTypeFactory implementation="org.jetbrains.kotlin.idea.KotlinModuleFileFactory"/>
+
+    <compileServer.plugin classpath="jps/kotlin-jps-plugin.jar;kotlin-runtime.jar;kotlin-reflect.jar;kotlin-plugin.jar;kotlin-android-extensions-plugin.jar;kotlin-android-extensions-compiler-plugin.jar"/>
+    <compiler.task execute="BEFORE" implementation="org.jetbrains.kotlin.idea.internal.makeBackup.MakeBackupCompileTask"/>
+    <buildProcess.parametersProvider implementation="org.jetbrains.kotlin.idea.compiler.configuration.KotlinBuildProcessParametersProvider"/>
+
+    <lang.syntaxHighlighterFactory key="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinSyntaxHighlighterFactory"/>
+    <syntaxHighlighter factoryClass="org.jetbrains.kotlin.idea.decompiler.builtIns.KotlinSyntaxHighlighterProviderForDecompiledBuiltIns"/>
+    <lang.braceMatcher language="kotlin" implementationClass="org.jetbrains.kotlin.idea.KotlinPairMatcher"/>
+    <lang.parserDefinition language="kotlin" implementationClass="org.jetbrains.kotlin.parsing.KotlinParserDefinition"/>
+    <lang.commenter language="kotlin" implementationClass="org.jetbrains.kotlin.idea.KotlinCommenter"/>
+    <lang.psiStructureViewFactory language="kotlin" implementationClass="org.jetbrains.kotlin.idea.structureView.KotlinStructureViewFactory"/>
+    <structureViewBuilder order="first" key="CLASS" factoryClass="org.jetbrains.kotlin.idea.structureView.KtClsStructureViewBuilderProvider"/>
+
+    <lang.foldingBuilder language="kotlin" implementationClass="org.jetbrains.kotlin.idea.KotlinFoldingBuilder"/>
+    <lang.formatter language="kotlin" implementationClass="org.jetbrains.kotlin.idea.formatter.KotlinFormattingModelBuilder"/>
+    <preFormatProcessor implementation="org.jetbrains.kotlin.idea.formatter.KotlinPreFormatProcessor"/>
+    <lang.findUsagesProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.findUsages.KotlinFindUsagesProvider"/>
+    <lang.elementManipulator forClass="org.jetbrains.kotlin.psi.KtStringTemplateExpression"
+                             implementationClass="org.jetbrains.kotlin.psi.psiUtil.KtStringTemplateExpressionManipulator"/>
+    <fileStructureGroupRuleProvider implementation="org.jetbrains.kotlin.idea.findUsages.KotlinDeclarationGroupRuleProvider"/>
+    <fileStructureGroupRuleProvider implementation="org.jetbrains.kotlin.idea.findUsages.KotlinDeclarationSecondLevelGroupRuleProvider"/>
+    <importFilteringRule implementation="org.jetbrains.kotlin.idea.findUsages.KotlinImportFilteringRule"/>
+    <lang.refactoringSupport language="kotlin" implementationClass="org.jetbrains.kotlin.idea.refactoring.KotlinRefactoringSupportProvider"/>
+    <lang.surroundDescriptor language="kotlin"
+                             implementationClass="org.jetbrains.kotlin.idea.codeInsight.surroundWith.expression.KotlinExpressionSurroundDescriptor"/>
+    <lang.surroundDescriptor language="kotlin"
+                             implementationClass="org.jetbrains.kotlin.idea.codeInsight.surroundWith.statement.KotlinStatementSurroundDescriptor"/>
+    <lang.unwrapDescriptor language="kotlin" implementationClass="org.jetbrains.kotlin.idea.codeInsight.unwrap.KotlinUnwrapDescriptor"/>
+    <quoteHandler fileType="Kotlin" className="org.jetbrains.kotlin.idea.editor.KotlinQuoteHandler"/>
+    <refactoring.helper implementation="org.jetbrains.kotlin.idea.codeInsight.KotlinShortenReferencesRefactoringHelper"/>
+    <refactoring.moveHandler
+        id="kotlin.moveFilesOrDirectories"
+        implementation="org.jetbrains.kotlin.idea.refactoring.move.moveFilesOrDirectories.KotlinMoveFilesOrDirectoriesHandler"
+        order="first"/>
+    <refactoring.moveHandler
+        id="kotlin.moveTopLevelDeclarations"
+        implementation="org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.MoveKotlinDeclarationsHandler"
+        order="first,before kotlin.moveFilesOrDirectories"/>
+    <moveFileHandler implementation="org.jetbrains.kotlin.idea.refactoring.move.moveFilesOrDirectories.MoveKotlinFileHandler" />
+    <refactoring.moveDirectoryWithClassesHelper
+        implementation="org.jetbrains.kotlin.idea.refactoring.move.moveFilesOrDirectories.KotlinMoveDirectoryWithClassesHelper"
+        order="first" />
+    <refactoring.moveClassHandler
+        implementation="org.jetbrains.kotlin.idea.refactoring.move.moveFilesOrDirectories.MoveKotlinClassHandler"
+        order="first"/>
+    <refactoring.moveInnerClassUsagesHandler
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.move.MoveJavaInnerClassKotlinUsagesHandler"
+        language="kotlin" />
+    <refactoring.copyHandler implementation="org.jetbrains.kotlin.idea.refactoring.copy.CopyKotlinFileHandler" order="first" />
+    <refactoring.changeSignatureUsageProcessor
+        implementation="org.jetbrains.kotlin.idea.refactoring.changeSignature.KotlinChangeSignatureUsageProcessor"
+        order="after javaProcessor" />
+    <refactoring.introduceParameterMethodUsagesProcessor
+        implementation="org.jetbrains.kotlin.idea.refactoring.introduce.introduceParameter.KotlinIntroduceParameterMethodUsageProcessor"/>
+    <inlineActionHandler implementation="org.jetbrains.kotlin.idea.refactoring.inline.KotlinInlineValHandler"/>
+    <inlineActionHandler implementation="org.jetbrains.kotlin.idea.refactoring.inline.KotlinInlineFunctionHandler"/>
+    <inlineActionHandler implementation="org.jetbrains.kotlin.idea.refactoring.inline.KotlinInlineTypeAliasHandler"/>
+    <treeStructureProvider implementation="org.jetbrains.kotlin.idea.projectView.KotlinSelectInProjectViewProvider"/>
+    <treeStructureProvider implementation="org.jetbrains.kotlin.idea.projectView.KotlinExpandNodeProjectViewProvider" order="last"/>
+
+    <colorSettingsPage implementation="org.jetbrains.kotlin.idea.highlighter.KotlinColorSettingsPage"/>
+    <additionalTextAttributes scheme="Default" file="colorScheme/Default_Kotlin.xml"/>
+    <additionalTextAttributes scheme="Darcula" file="colorScheme/Darcula_Kotlin.xml"/>
+
+    <codeStyleSettingsProvider implementation="org.jetbrains.kotlin.idea.formatter.KotlinCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider implementation="org.jetbrains.kotlin.idea.formatter.KotlinLanguageCodeStyleSettingsProvider"/>
+
+    <projectConfigurable instance="org.jetbrains.kotlin.idea.compiler.configuration.KotlinCompilerConfigurableTab"
+                         id="project.kotlinCompiler"
+                         displayName="Kotlin Compiler"
+                         parentId="project.propCompiler"/>
+
+    <qualifiedNameProvider implementation="org.jetbrains.kotlin.idea.actions.KotlinQualifiedNameProvider"/>
+
+    <codeInsight.parameterInfo language="kotlin" implementationClass="org.jetbrains.kotlin.idea.parameterInfo.KotlinFunctionParameterInfoHandler"/>
+    <codeInsight.parameterInfo language="kotlin" implementationClass="org.jetbrains.kotlin.idea.parameterInfo.KotlinArrayAccessParameterInfoHandler"/>
+    <codeInsight.parameterInfo language="kotlin" implementationClass="org.jetbrains.kotlin.idea.parameterInfo.KotlinClassTypeArgumentInfoHandler"/>
+    <codeInsight.parameterInfo language="kotlin" implementationClass="org.jetbrains.kotlin.idea.parameterInfo.KotlinFunctionTypeArgumentInfoHandler"/>
+
+    <codeInsight.gotoSuper language="kotlin" implementationClass="org.jetbrains.kotlin.idea.codeInsight.GotoSuperActionHandler"/>
+
+    <codeInsight.template.postfixTemplateProvider language="kotlin"
+                                                  implementationClass="org.jetbrains.kotlin.idea.codeInsight.postfix.KtPostfixTemplateProvider"/>
+
+
+    <typeDeclarationProvider implementation="org.jetbrains.kotlin.idea.codeInsight.KotlinTypeDeclarationProvider"/>
+
+    <completion.contributor language="kotlin"
+                            id="KotlinCompletionContributor"
+                            order="first"
+                            implementationClass="org.jetbrains.kotlin.idea.completion.KotlinCompletionContributor"/>
+    <completion.contributor language="kotlin"
+                            implementationClass="org.jetbrains.kotlin.idea.completion.KDocCompletionContributor"/>
+
+    <completion.confidence language="kotlin" implementationClass="com.intellij.codeInsight.completion.UnfocusedNameIdentifier"/>
+    <completion.confidence language="kotlin"
+                           implementationClass="org.jetbrains.kotlin.idea.completion.confidence.UnfocusedPossibleFunctionParameter"/>
+    <completion.confidence language="kotlin" implementationClass="com.intellij.codeInsight.completion.AlwaysFocusLookup" order="last"/>
+    <completion.confidence language="kotlin" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings"/>
+
+    <lookup.charFilter implementation="org.jetbrains.kotlin.idea.completion.KotlinCompletionCharFilter"/>
+    <lookup.actionProvider implementation="org.jetbrains.kotlin.idea.completion.KotlinExcludeFromCompletionLookupActionProvider"/>
+
+    <statistician key="completion" implementationClass="org.jetbrains.kotlin.idea.completion.KotlinCompletionStatistician"/>
+    <statistician key="proximity" implementationClass="org.jetbrains.kotlin.idea.completion.KotlinProximityStatistician"/>
+
+    <weigher key="completion" implementationClass="org.jetbrains.kotlin.idea.completion.KotlinLookupElementProximityWeigher" id="kotlin.proximity" order="after proximity"/>
+
+    <psi.referenceContributor language="kotlin" implementation="org.jetbrains.kotlin.idea.references.KotlinReferenceContributor"/>
+    <psi.referenceContributor
+        id="kotlinFilePathReferenceContributor"
+        language="kotlin"
+        implementation="org.jetbrains.kotlin.idea.references.KotlinFilePathReferenceContributor"/>
+    <psi.referenceContributor
+        id="kotlinDefaultAnnotationMethodImplicitReferenceContributor"
+        language="kotlin"
+        implementation="org.jetbrains.kotlin.idea.references.KotlinDefaultAnnotationMethodImplicitReferenceContributor"/>
+
+    <renamePsiElementProcessor id="KotlinClass"
+                               implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinClassProcessor"
+                               order="first"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinFunctionProcessor"
+                               id="KotlinFunction"
+                               order="first"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinPropertyProcessor"
+                               id="KotlinProperty"
+                               order="first"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinParameterProcessor"
+                               id="KotlinParameter"
+                               order="first"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinFileProcessor"
+                               id="KotlinFile"
+                               order="first"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinTypeParameterProcessor"
+                               id="KotlinTypeParameter"/>
+    <renamePsiElementProcessor implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameJavaSyntheticPropertyHandler$Processor"
+                               id="JavaSyntheticPropertyFromKotlin"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameKotlinImplicitLambdaParameter"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameDynamicMemberHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameOnSecondaryConstructorHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameJavaSyntheticPropertyHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.JavaMemberByKotlinReferenceInplaceRenameHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameJvmNameHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.KotlinDirectoryAsPackageRenameHandler"/>
+    <renameHandler implementation="org.jetbrains.kotlin.idea.refactoring.rename.RenameBackingFieldReferenceHandler"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.AutomaticVariableRenamerFactory"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.AutomaticVariableRenamerFactoryForJavaClass"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.AutomaticVariableInJavaRenamerFactory"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.AutomaticInheritorRenamerFactory"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.AutomaticOverloadsRenamerFactory"/>
+    <automaticRenamerFactory implementation="org.jetbrains.kotlin.idea.refactoring.rename.KotlinAutomaticTestRenamerFactory"/>
+    <vetoRenameCondition implementation="org.jetbrains.kotlin.idea.refactoring.KotlinVetoRenameCondition"/>
+    <renameInputValidator implementation="org.jetbrains.kotlin.idea.refactoring.rename.KotlinDeclarationRenameInputValidator"/>
+    <rename.inplace.resolveSnapshotProvider
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.rename.KotlinResolveSnapshotProvider"/>
+
+    <spellchecker.support implementationClass="org.jetbrains.kotlin.idea.KotlinSpellcheckingStrategy" language="kotlin"/>
+
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$Generic"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$TopLevel"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$Statement"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$Class"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$Expression"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$Comment"/>
+    <liveTemplateContext implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinTemplateContextType$ObjectDeclaration"/>
+    <defaultLiveTemplatesProvider implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinLiveTemplatesProvider"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.AnyVariableMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.SuitableVariableMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.FunctionParametersMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.AnonymousSuperMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.SuggestVariableNameMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.KotlinClassNameMacro"/>
+    <liveTemplateMacro implementation="org.jetbrains.kotlin.idea.liveTemplates.macro.KotlinFunctionNameMacro"/>
+    <liveTemplateOptionalProcessor implementation="org.jetbrains.kotlin.idea.liveTemplates.KotlinShortenFQNamesProcessor"/>
+
+    <annotator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinPsiCheckerAndHighlightingUpdater"/>
+    <highlightRangeExtension implementation="org.jetbrains.kotlin.idea.highlighter.KotlinPsiChecker"/>
+    <daemon.changeLocalityDetector implementation="org.jetbrains.kotlin.idea.highlighter.KotlinChangeLocalityDetector"/>
+
+    <annotator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.DebugInfoAnnotator"/>
+    <annotator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.DuplicateJvmSignatureAnnotator"/>
+    <annotator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.PlatformHeaderAnnotator"/>
+    <problemHighlightFilter implementation="org.jetbrains.kotlin.idea.highlighter.KotlinProblemHighlightFilter"/>
+
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinStatementGroupSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinCodeBlockSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinDocCommentSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinDeclarationSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinListSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinStringLiteralSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinInvokedExpressionSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinTypeSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinSuperTypeSelectioner"/>
+    <extendWordSelectionHandler implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinBracketsSelectioner"/>
+    <basicWordSelectionFilter implementation="org.jetbrains.kotlin.idea.editor.wordSelection.KotlinWordSelectionFilter"/>
+
+    <typedHandler implementation="org.jetbrains.kotlin.idea.editor.KotlinTypedHandler"/>
+    <typedHandler implementation="org.jetbrains.kotlin.idea.kdoc.KDocTypedHandler"/>
+    <enterHandlerDelegate implementation="org.jetbrains.kotlin.idea.editor.KotlinEnterHandler"
+                          id="KotlinEnterHandler" order="before EnterBetweenBracesHandler"/>
+    <lang.smartEnterProcessor language="kotlin" implementationClass="org.jetbrains.kotlin.idea.editor.KotlinSmartEnterHandler"/>
+    <backspaceHandlerDelegate implementation="org.jetbrains.kotlin.idea.editor.KotlinBackspaceHandler"/>
+    <backspaceHandlerDelegate implementation="org.jetbrains.kotlin.idea.editor.KotlinStringTemplateBackspaceHandler"/>
+
+    <copyPastePostProcessor implementation="org.jetbrains.kotlin.idea.conversion.copy.ConvertJavaCopyPasteProcessor"/>
+    <copyPastePostProcessor implementation="org.jetbrains.kotlin.idea.conversion.copy.ConvertTextJavaCopyPasteProcessor"/>
+    <copyPastePostProcessor implementation="org.jetbrains.kotlin.idea.codeInsight.KotlinCopyPasteReferenceProcessor"/>
+
+    <breadcrumbsInfoProvider implementation="org.jetbrains.kotlin.idea.codeInsight.KotlinBreadcrumbsInfoProvider"/>
+
+    <lang.documentationProvider language="JAVA" implementationClass="org.jetbrains.kotlin.idea.KotlinQuickDocumentationProvider" order="first"/>
+    <documentationProvider implementation="org.jetbrains.kotlin.idea.KotlinQuickDocumentationProvider"/>
+    <configurationType implementation="org.jetbrains.kotlin.idea.run.JetRunConfigurationType"/>
+    <configurationType implementation="org.jetbrains.kotlin.idea.run.script.standalone.KotlinStandaloneScriptRunConfigurationType"/>
+    <configurationType implementation="org.jetbrains.kotlin.idea.k2jsrun.K2JSRunConfigurationType"/>
+    <programRunner implementation="org.jetbrains.kotlin.idea.k2jsrun.K2JSBrowserProgramRunner"/>
+    <runConfigurationProducer implementation="org.jetbrains.kotlin.idea.run.KotlinRunConfigurationProducer"/>
+    <runConfigurationProducer implementation="org.jetbrains.kotlin.idea.run.script.standalone.KotlinStandaloneScriptRunConfigurationProducer"/>
+
+    <codeInsight.lineMarkerProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.markers.KotlinLineMarkerProvider"/>
+    <codeInsight.lineMarkerProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinRecursiveCallLineMarkerProvider"/>
+    <codeInsight.lineMarkerProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinSuspendCallLineMarkerProvider"/>
+    <runLineMarkerContributor language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinRunLineMarkerContributor"/>
+    <runLineMarkerContributor language="kotlin" implementationClass="org.jetbrains.kotlin.idea.highlighter.KotlinTestRunLineMarkerContributor"/>
+
+    <iconProvider implementation="org.jetbrains.kotlin.idea.KotlinIconProvider"/>
+
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtFunctionPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtFunction"/>
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtDefaultDeclarationPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtClass"/>
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtDefaultDeclarationPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtObjectDeclaration"/>
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtDefaultDeclarationPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtProperty"/>
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtDefaultDeclarationPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtParameter"/>
+    <itemPresentationProvider implementationClass="org.jetbrains.kotlin.idea.presentation.KtDefaultDeclarationPresenter"
+                              forClass="org.jetbrains.kotlin.psi.KtTypeAlias"/>
+
+    <gotoTargetRendererProvider id="JetGotoTargetRenderProvider" implementation="org.jetbrains.kotlin.idea.KotlinGotoTargetRenderProvider"
+                                order="first"/>
+    <elementDescriptionProvider
+        implementation="org.jetbrains.kotlin.idea.findUsages.KotlinElementDescriptionProvider"
+        order="first"/>
+    <elementDescriptionProvider
+        implementation="org.jetbrains.kotlin.idea.findUsages.KotlinNonCodeSearchElementDescriptionProvider"/>
+    <highlightUsagesHandlerFactory implementation="org.jetbrains.kotlin.idea.highlighter.KotlinHighlightExitPointsHandlerFactory"/>
+    <findUsagesHandlerFactory implementation="org.jetbrains.kotlin.idea.findUsages.KotlinFindUsagesHandlerFactory"/>
+    <usageTypeProvider implementation="org.jetbrains.kotlin.idea.findUsages.KotlinUsageTypeProvider"/>
+
+    <refactoring.safeDeleteProcessor
+        id="kotlinProcessor"
+        implementation="org.jetbrains.kotlin.idea.refactoring.safeDelete.KotlinSafeDeleteProcessor"
+        order="before javaProcessor"/>
+    <refactoring.safeDelete.JavaSafeDeleteDelegate
+        id="kotlinJavaSafeDeleteDelegate"
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.safeDelete.KotlinJavaSafeDeleteDelegate"/>
+    <debugger.jvmSmartStepIntoHandler implementation="org.jetbrains.kotlin.idea.debugger.stepping.KotlinSmartStepIntoHandler"/>
+    <debugger.positionManagerFactory implementation="org.jetbrains.kotlin.idea.debugger.KotlinPositionManagerFactory"/>
+    <debugger.codeFragmentFactory implementation="org.jetbrains.kotlin.idea.debugger.evaluate.KotlinCodeFragmentFactory"/>
+    <debuggerEditorTextProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.debugger.KotlinEditorTextProvider"/>
+    <debuggerClassFilterProvider implementation="org.jetbrains.kotlin.idea.debugger.filter.KotlinDebuggerInternalClassesFilterProvider"/>
+    <debugger.nodeRenderer implementation="org.jetbrains.kotlin.idea.debugger.render.KotlinClassWithDelegatedPropertyRenderer"/>
+    <debugger.sourcePositionProvider implementation="org.jetbrains.kotlin.idea.debugger.KotlinSourcePositionProvider"/>
+    <debugger.sourcePositionHighlighter implementation="org.jetbrains.kotlin.idea.debugger.KotlinSourcePositionHighlighter"/>
+    <debugger.frameExtraVarsProvider implementation="org.jetbrains.kotlin.idea.debugger.KotlinFrameExtraVariablesProvider"/>
+    <debugger.extraSteppingFilter implementation="org.jetbrains.kotlin.idea.KotlinExtraSteppingFilter"/>
+    <xdebugger.settings implementation="org.jetbrains.kotlin.idea.debugger.KotlinDebuggerSettings"/>
+    <xdebugger.breakpointType implementation="org.jetbrains.kotlin.idea.debugger.breakpoints.KotlinFieldBreakpointType"/>
+    <xdebugger.breakpointType implementation="org.jetbrains.kotlin.idea.debugger.breakpoints.KotlinLineBreakpointType" order="first"/>
+    <debugger.syntheticProvider implementation="org.jetbrains.kotlin.idea.debugger.filter.KotlinSyntheticTypeComponentProvider"/>
+    <debugger.javaBreakpointHandlerFactory implementation="org.jetbrains.kotlin.idea.debugger.breakpoints.KotlinFieldBreakpointHandlerFactory"/>
+    <debugger.javaBreakpointHandlerFactory implementation="org.jetbrains.kotlin.idea.debugger.breakpoints.KotlinLineBreakpointHandlerFactory"/>
+    <debugger.jvmSteppingCommandProvider implementation="org.jetbrains.kotlin.idea.debugger.stepping.KotlinSteppingCommandProvider"/>
+    <debugger.simplePropertyGetterProvider implementation="org.jetbrains.kotlin.idea.debugger.stepping.KotlinSimpleGetterProvider"/>
+
+    <codeInsight.implementMethod language="kotlin" implementationClass="org.jetbrains.kotlin.idea.core.overrideImplement.ImplementMembersHandler"/>
+    <codeInsight.overrideMethod language="kotlin" implementationClass="org.jetbrains.kotlin.idea.core.overrideImplement.OverrideMembersHandler"/>
+
+    <framework.type implementation="org.jetbrains.kotlin.idea.framework.JavaFrameworkType"/>
+    <framework.type implementation="org.jetbrains.kotlin.idea.framework.JSFrameworkType"/>
+    <projectTemplatesFactory implementation="org.jetbrains.kotlin.idea.framework.KotlinTemplatesFactory" />
+
+    <library.presentationProvider implementation="org.jetbrains.kotlin.idea.framework.JavaRuntimePresentationProvider"/>
+    <library.presentationProvider implementation="org.jetbrains.kotlin.idea.framework.JSLibraryStdPresentationProvider"/>
+
+    <library.javaSourceRootDetector implementation="org.jetbrains.kotlin.idea.configuration.KotlinSourceRootDetector"/>
+
+    <typeHierarchyProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.hierarchy.KotlinTypeHierarchyProviderBySuperTypeCallEntry"/>
+    <typeHierarchyProvider language="kotlin" implementationClass="org.jetbrains.kotlin.idea.hierarchy.KotlinTypeHierarchyProvider"/>
+    <typeHierarchyProvider language="JAVA" implementationClass="org.jetbrains.kotlin.idea.hierarchy.KotlinTypeHierarchyProviderBySuperTypeCallEntry" order="last"/>
+    <callHierarchyProvider
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.hierarchy.calls.KotlinCallHierarchyProvider" />
+    <hierarchy.referenceProcessor implementation="org.jetbrains.kotlin.idea.hierarchy.calls.KotlinCallReferenceProcessor"/>
+    <methodHierarchyProvider
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.hierarchy.overrides.KotlinOverrideHierarchyProvider" />
+
+    <java.elementFinder implementation="org.jetbrains.kotlin.asJava.finder.JavaElementFinder"/>
+    <java.elementFinder implementation="org.jetbrains.kotlin.idea.core.script.KotlinScriptDependenciesClassFinder"/>
+    <java.shortNamesCache implementation="org.jetbrains.kotlin.idea.caches.KotlinShortNamesCache"/>
+
+    <stubElementTypeHolder class="org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinExactPackagesIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelClassByPackageIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelFunctionByPackageIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelPropertyByPackageIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasByPackageIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinClassShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinPropertyShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFunctionShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTypeAliasShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinSuperClassIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelFunctionFqnNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelPropertyFqnNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelExtensionsByReceiverTypeIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinAnnotationsIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinProbablyNothingFunctionShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinProbablyNothingPropertyShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFileFacadeFqNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFilePartClassIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFileFacadeClassByPackageIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinFileFacadeShortNameIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinMultifileClassPartIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinScriptFqnIndex"/>
+    <stubIndex implementation="org.jetbrains.kotlin.idea.stubindex.KotlinTypeAliasByExpansionShortNameIndex"/>
+
+    <psi.classFileDecompiler implementation="org.jetbrains.kotlin.idea.decompiler.classFile.KotlinClassFileDecompiler"/>
+    <psi.classFileDecompiler implementation="org.jetbrains.kotlin.idea.decompiler.js.KotlinJavaScriptMetaFileDecompiler"/>
+    <psi.classFileDecompiler implementation="org.jetbrains.kotlin.idea.decompiler.builtIns.KotlinBuiltInDecompiler"/>
+
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.versions.KotlinMetadataVersionIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.versions.KotlinJavaScriptAbiVersionIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.vfilefinder.KotlinClassFileIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.vfilefinder.KotlinJavaScriptMetaFileIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.vfilefinder.KotlinMetadataFileIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.vfilefinder.KotlinMetadataFilePackageIndex"/>
+    <fileBasedIndex implementation="org.jetbrains.kotlin.idea.vfilefinder.KotlinModuleMappingIndex"/>
+
+    <idIndexer filetype="Kotlin" implementationClass="org.jetbrains.kotlin.idea.search.KotlinIdIndexer"/>
+    <todoIndexer filetype="Kotlin" implementationClass="org.jetbrains.kotlin.idea.search.KotlinTodoIndexer"/>
+    <indexPatternBuilder implementation="org.jetbrains.kotlin.idea.search.KotlinIndexPatternBuilder"/>
+
+    <editorNotificationProvider implementation="org.jetbrains.kotlin.idea.versions.UnsupportedAbiVersionNotificationPanelProvider"/>
+    <editorNotificationProvider implementation="org.jetbrains.kotlin.idea.configuration.KotlinSetupEnvironmentNotificationProvider"/>
+
+    <attachSourcesProvider implementation="org.jetbrains.kotlin.idea.actions.DecompileKotlinToJavaActionProvider"/>
+
+    <referencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinReferencesSearcher"/>
+    <directClassInheritorsSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinDirectInheritorsSearcher"/>
+    <overridingMethodsSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinOverridingMethodsWithGenericsSearcher"/>
+    <definitionsScopedSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinDefinitionsSearcher"/>
+    <annotatedElementsSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinAnnotatedElementsSearcher"/>
+    <classesWithAnnotatedMembersSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinClassesWithAnnotatedMembersSearcher"/>
+    <methodReferencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinPropertyAccessorsReferenceSearcher"/>
+    <methodReferencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinConstructorDelegationCallReferenceSearcher"/>
+    <methodReferencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinOverridingMethodReferenceSearcher"/>
+    <methodReferencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinConventionMethodReferencesSearcher"/>
+    <methodReferencesSearch implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.DefaultAnnotationMethodKotlinImplicitReferenceSearcher"/>
+
+    <readWriteAccessDetector implementation="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinReadWriteAccessDetector" id="kotlin"/>
+
+    <exceptionFilter implementation="org.jetbrains.kotlin.idea.filters.KotlinExceptionFilterFactory" order="first"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.editor.KotlinEditorOptions"
+                        serviceImplementation="org.jetbrains.kotlin.idea.editor.KotlinEditorOptions"/>
+    <editorSmartKeysConfigurable instance="org.jetbrains.kotlin.idea.editor.KotlinEditorOptionsConfigurable"/>
+
+    <applicationService serviceInterface="org.jetbrains.kotlin.idea.refactoring.KotlinRefactoringSettings"
+                        serviceImplementation="org.jetbrains.kotlin.idea.refactoring.KotlinRefactoringSettings"/>
+
+    <statementUpDownMover id="jetExpression"
+                          implementation="org.jetbrains.kotlin.idea.codeInsight.upDownMover.KotlinExpressionMover"
+                          order="before declaration" />
+
+    <statementUpDownMover id="jetDeclaration"
+                          implementation="org.jetbrains.kotlin.idea.codeInsight.upDownMover.KotlinDeclarationMover"
+                          order="before jetExpression" />
+
+    <moveLeftRightHandler language="kotlin" implementationClass="org.jetbrains.kotlin.idea.codeInsight.KotlinMoveLeftRightHandler"/>
+
+    <joinLinesHandler implementation="org.jetbrains.kotlin.idea.joinLines.JoinDeclarationAndAssignmentHandler"/>
+    <joinLinesHandler implementation="org.jetbrains.kotlin.idea.joinLines.JoinBlockIntoSingleStatementHandler"/>
+
+    <targetElementEvaluator
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinTargetElementEvaluator" />
+
+    <refactoring.pullUpHelperFactory
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.pullUp.KotlinPullUpHelperFactory"/>
+    <refactoring.pullUpHelperFactory
+        language="JAVA"
+        order="first"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.pullUp.JavaToKotlinPullUpHelperFactory"/>
+
+    <lang.refactoringSupport.classMembersRefactoringSupport
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.memberInfo.KotlinClassMembersRefactoringSupport"/>
+
+    <refactoring.pushDown
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.refactoring.pushDown.JavaToKotlinPushDownDelegate"/>
+
+    <problemFileHighlightFilter implementation="org.jetbrains.kotlin.idea.projectView.KotlinProblemFileHighlightFilter"/>
+
+    <codeInsight.typeInfo language="kotlin" implementationClass="org.jetbrains.kotlin.idea.codeInsight.KotlinExpressionTypeProvider"/>
+
+    <testCreator language="kotlin" implementationClass="org.jetbrains.kotlin.idea.testIntegration.KotlinTestCreator"/>
+    <testFinder implementation="org.jetbrains.kotlin.idea.testIntegration.KotlinTestFinder"/>
+
+    <constantExpressionEvaluator
+        language="kotlin"
+        implementationClass="org.jetbrains.kotlin.idea.KotlinLightConstantExpressionEvaluator"/>
+
+    <annotationSupport language="kotlin" implementationClass="com.intellij.psi.impl.source.tree.java.JavaAnnotationSupport"/>
+
+    <createFromTemplateHandler implementation="org.jetbrains.kotlin.idea.actions.KotlinCreateFromTemplateHandler"/>
+
+    <nameSuggestionProvider implementation="org.jetbrains.kotlin.idea.core.KotlinNameSuggestionProvider"/>
+
+    <usageToPsiElementProvider implementation="org.jetbrains.kotlin.idea.codeInsight.KotlinUsageToPsiElementProvider"/>
+
+    <facetType implementation="org.jetbrains.kotlin.idea.facet.KotlinFacetType"/>
+
+    <framework.detector implementation="org.jetbrains.kotlin.idea.facet.KotlinFrameworkDetector"/>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.FoldInitializerAndIfToElvisIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SimplifyAssertNotNullIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ImportMemberIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ImportAllMembersIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SpecifyTypeExplicitlyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveExplicitTypeIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertToExpressionBodyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertToBlockBodyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FoldIfToAssignmentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceGetOrSetIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceContainsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceInvokeIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceCallWithUnaryOperatorIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceCallWithBinaryOperatorIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FoldIfToReturnAsymmetricallyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FoldIfToReturnIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FoldWhenToAssignmentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FoldWhenToReturnIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldAssignmentToIfIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldPropertyToIfIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldAssignmentToWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldPropertyToWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldReturnToIfIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.UnfoldReturnToWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.DoubleBangToIfThenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfThenToDoubleBangIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.ElvisToIfThenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfThenToElvisIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.SafeAccessToIfThenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfThenToSafeAccessIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfToWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.WhenToIfIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.FlattenWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IntroduceWhenSubjectIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.EliminateWhenSubjectIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.MergeWhenIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SimplifyNegatedBinaryExpressionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveUnnecessaryParenthesesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveExplicitTypeArgumentsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveExplicitSuperQualifierIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveCurlyBracesFromTemplateIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.InsertCurlyBracesToTemplateIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.MoveLambdaInsideParenthesesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.InsertExplicitTypeArgumentsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.MoveLambdaOutsideParenthesesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.declarations.SplitPropertyDeclarationIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.declarations.ConvertMemberToExtensionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReconstructTypeInCastOrIsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.InfixCallToOrdinaryIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ToInfixCallIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceExplicitFunctionLiteralParamWithItIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceItWithExplicitFunctionLiteralParamIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSubstringWithDropLastIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSubstringWithSubstringAfterIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSubstringWithSubstringBeforeIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSubstringWithTakeIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveBracesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddBracesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertNegatedBooleanSequenceIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertNegatedExpressionWithDemorgansLawIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SimplifyBooleanWithConstantsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddForLoopIndicesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveForLoopIndicesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.loopToCallChain.LoopToCallChainIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.loopToCallChain.LoopToLazyCallChainIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.loopToCallChain.UseWithIndexIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SwapBinaryExpressionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SplitIfIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceWithOperatorAssignmentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceWithOrdinaryAssignmentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertAssertToIfWithThrowIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertIfWithThrowToAssertIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.SpecifyExplicitLambdaSignatureIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveExplicitLambdaParameterTypesIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertForEachToForLoopIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertToForEachFunctionCallIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertToStringTemplateIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.OperatorToFunctionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertToConcatenatedStringIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertFunctionToPropertyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertPropertyToFunctionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertReceiverToParameterIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertParameterToReceiverIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertPropertyInitializerToGetterIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.InvertIfConditionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.refactoring.move.changePackage.ChangePackageIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.refactoring.move.changePackage.MoveFileToPackageMatchingDirectoryIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.refactoring.move.changePackage.ChangePackageToMatchDirectoryIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.MoveDeclarationToSeparateFileIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ChangeVisibilityModifierIntention$Public</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ChangeVisibilityModifierIntention$Private</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ChangeVisibilityModifierIntention$Protected</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ChangeVisibilityModifierIntention$Internal</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.DeprecatedCallableAddReplaceWithIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddNameToArgumentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddJvmOverloadsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveArgumentNameIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.IterateExpressionIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.UsePropertyAccessSyntaxIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.quickfix.AddConstModifierIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.IntroduceBackingPropertyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.JoinDeclarationAndAssignmentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.testIntegration.KotlinCreateTestIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddOperatorModifierIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ObjectLiteralToLambdaIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.DestructureIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AnonymousFunctionToLambdaIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ImplementAbstractMemberIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ImplementAbstractMemberAsConstructorParameterIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddValVarToConstructorParameterAction$Intention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.MoveMemberToCompanionObjectIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.MoveMemberOutOfCompanionObjectIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.CreateKotlinSubClassIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ToRawStringLiteralIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ToOrdinaryStringLiteralIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.IntroduceVariableIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveAtFromAnnotationArgumentIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertLambdaToReferenceIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertReferenceToLambdaIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveSingleExpressionStringTemplateIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceRangeToWithUntilIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceUntilWithRangeToIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveEmptyParenthesesFromLambdaCallIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceArrayEqualityOpWithArraysEqualsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertCamelCaseTestFunctionToSpacedIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSingleLineLetIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.copyConcatenatedStringToClipboard.CopyConcatenatedStringToClipboardIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceMathMaxWithCoerceAtLeastIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceMathMinWithCoerceAtMostIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertPrimaryConstructorToSecondaryIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertSecondaryConstructorToPrimaryIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSizeCheckWithIsNotEmptyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ReplaceSizeZeroCheckWithIsEmptyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveEmptyClassBodyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertEnumToSealedClassIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertSealedClassToEnumIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveRedundantCallsOfConversionMethodsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveEmptyPrimaryConstructorIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveEmptySecondaryConstructorBodyIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertTryFinallyToUseCallIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.AddNamesToCallArgumentsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertFunctionTypeParameterToReceiverIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertFunctionTypeReceiverToParameterIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertTwoComparisonsToRangeCheckIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertRangeCheckToTwoComparisonsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.RenameFileToMatchClassIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.ConvertObjectLiteralToClassIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.MergeIfsIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ObjectLiteralToLambdaInspection"
+                     displayName="Object literal can be converted to lambda"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.SimplifyAssertNotNullInspection"
+                     displayName="‘assert’ call can be replaced with ‘!!’ or ‘?:'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.DeprecatedCallableAddReplaceWithInspection"
+                     displayName="@Deprecated annotation without 'replaceWith' argument"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertToStringTemplateInspection"
+                     displayName="String concatenation that can be converted to string template"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceGetOrSetInspection"
+                     displayName="Explicit 'get' or 'set' call"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfThenToElvisInspection"
+                     displayName="If-Then foldable to '?:'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IfThenToSafeAccessInspection"
+                     displayName="If-Then foldable to '?.'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.FoldInitializerAndIfToElvisInspection"
+                     displayName="If-Null return/break/... foldable to '?:'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveExplicitTypeArgumentsInspection"
+                     displayName="Unnecessary type argument"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveExplicitSuperQualifierInspection"
+                     displayName="Unnecessary supertype qualification"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.SimplifyNegatedBinaryExpressionInspection"
+                     displayName="Negated boolean expression that can be simplified"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ReplaceWithOperatorAssignmentInspection"
+                     displayName="Assignment that can be replaced with operator assignment"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.branchedTransformations.intentions.IntroduceWhenSubjectInspection"
+                     displayName="'when' that can be simplified by introducing an argument"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveCurlyBracesFromTemplateInspection"
+                     displayName="Redundant curly braces in string template"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.SimplifyBooleanWithConstantsInspection"
+                     displayName="Boolean expression that can be simplified"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.UsePropertyAccessSyntaxInspection"
+                     displayName="Accessor call that can be replaced with property access syntax"
+                     shortName="UsePropertyAccessSyntax"
+                     groupName="Kotlin"
+                     cleanupTool="true"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.UnusedSymbolInspection"
+                     displayName="Unused symbol"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     runForWholeFile="true"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.UnusedReceiverParameterInspection"
+                     displayName="Unused receiver parameter"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.KotlinUnusedImportInspection"
+                     displayName="Unused import directive"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     runForWholeFile="true"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RedundantSamConstructorInspection"
+                     displayName="Redundant SAM constructor"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.UnsafeCastFromDynamicInspection"
+                     displayName="Implicit (unsafe) cast from dynamic type"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.OverridingDeprecatedMemberInspection"
+                     shortName="OverridingDeprecatedMember"
+                     displayName="Overriding deprecated member"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.kdoc.KDocUnresolvedReferenceInspection"
+                     displayName="Unresolved reference in KDoc"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.kdoc.KDocMissingDocumentationInspection"
+                     displayName="Missing KDoc comments for public declarations"
+                     groupName="Kotlin"
+                     enabledByDefault="false"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.refactoring.move.changePackage.PackageDirectoryMismatchInspection"
+                     displayName="Package name does not match containing directory"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.KotlinCleanupInspection"
+                     shortName="KotlinDeprecation"
+                     displayName="Usage of redundant or deprecated syntax or deprecated symbols"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveForLoopIndicesInspection"
+                     displayName="Unused loop index"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.loopToCallChain.LoopToCallChainInspection"
+                     displayName="Loop can be replaced with stdlib operations"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.loopToCallChain.UseWithIndexInspection"
+                     displayName="Manually incremented index variable can be replaced with use of 'withIndex()'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+    />
+
+      <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.ConflictingExtensionPropertyInspection"
+                       displayName="Extension property conflicting with synthetic one"
+                       groupName="Kotlin"
+                       enabledByDefault="true"
+                       level="WARNING"
+                       language="kotlin"
+      />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.EqualsOrHashCodeInspection"
+                     displayName="equals() and hashCode() not paired"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RedundantVisibilityModifierInspection"
+                     displayName="Redundant visibility modifier"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.DestructureInspection"
+                     displayName="Use destructuring declaration"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="false"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.CanBeValInspection"
+                     displayName="Local 'var' is never modified and can be declared as 'val'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.ArrayInDataClassInspection"
+                     displayName="Array property in data class"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.ProtectedInFinalInspection"
+                     displayName="'protected' visibility is effectively 'private' in a final class"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.AddVarianceModifierInspection"
+                     displayName="Type parameter can have 'in' or 'out' variance"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.CanBeParameterInspection"
+                     displayName="Constructor parameter is never used as a property"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RedundantModalityModifierInspection"
+                     displayName="Redundant modality modifier"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RedundantSemicolonInspection"
+                     displayName="Redundant semicolon"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RedundantIfInspection"
+                     displayName="Redundant 'if' statement"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.LeakingThisInspection"
+                     displayName="Leaking 'this' in constructor"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.HasPlatformTypeInspection"
+                     displayName="Function or property has platform type"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.CanBePrimaryConstructorPropertyInspection"
+                     displayName="Property is explicitly assigned to constructor parameter"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveAtFromAnnotationArgumentInspection"
+                     displayName="Unnecessary @"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertLambdaToReferenceInspection"
+                     displayName="Can be replaced with function reference"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertReferenceToLambdaInspection"
+                     displayName="Can be replaced with lambda"
+                     groupName="Kotlin"
+                     enabledByDefault="false"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveSetterParameterTypeInspection"
+                     displayName="Redundant setter parameter type"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.conventionNameCalls.ReplaceCallWithComparisonInspection"
+                     displayName="Can be replaced with comparison"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveSingleExpressionStringTemplateInspection"
+                     displayName="Remove redundant string template"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RemoveToStringInStringTemplateInspection"
+                     displayName="Remove redundant call to 'toString()' in string template"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveEmptyParenthesesFromLambdaCallInspection"
+                     displayName="Remove unnecessary parentheses from function call with lambda"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ReplaceArrayEqualityOpWithArraysEqualsInspection"
+                     displayName="Replace '==' with 'Arrays.equals'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ReplaceSingleLineLetInspection"
+                     displayName="Replace single line .let"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertSecondaryConstructorToPrimaryInspection"
+                     displayName="Convert to primary constructor"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ReplaceSizeCheckWithIsNotEmptyInspection"
+                     displayName="Replace size check with 'isNotEmpty()'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ReplaceSizeZeroCheckWithIsEmptyInspection"
+                     displayName="Replace size zero check with 'isEmpty()'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveEmptyClassBodyInspection"
+                     displayName="Replace empty class body"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     cleanupTool="true"
+                     level="INFO"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveRedundantCallsOfConversionMethodsInspection"
+                     displayName="Remove redundant calls of conversion methods"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveEmptyPrimaryConstructorInspection"
+                     displayName="Remove empty primary constructor"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveEmptySecondaryConstructorBodyInspection"
+                     displayName="Remove empty constructor body"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.JoinDeclarationAndAssignmentInspection"
+                     displayName="Join declaration and assignment"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertTryFinallyToUseCallInspection"
+                     displayName="Convert try / finally to use() call"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ConvertTwoComparisonsToRangeCheckInspection"
+                     displayName="Convert two comparisons to 'in'"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WEAK WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.UnusedEqualsInspection"
+                     displayName="Unused equals expression"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.DataClassPrivateConstructorInspection"
+                     displayName="Private data class constructor is exposed via the 'copy' method"
+                     groupName="Kotlin"
+                     enabledByDefault="true"
+                     level="WARNING"
+                     language="kotlin"
+    />
+
+
+    <referenceImporter implementation="org.jetbrains.kotlin.idea.quickfix.KotlinReferenceImporter"/>
+
+    <fileType.fileViewProviderFactory filetype="KJSM" implementationClass="com.intellij.psi.ClassFileViewProviderFactory"/>
+    <filetype.stubBuilder filetype="KJSM" implementationClass="com.intellij.psi.impl.compiled.ClassFileStubBuilder"/>
+    <filetype.decompiler filetype="KJSM" implementationClass="com.intellij.psi.impl.compiled.ClassFileDecompiler"/>
+
+    <fileType.fileViewProviderFactory filetype="kotlin_builtins" implementationClass="com.intellij.psi.ClassFileViewProviderFactory"/>
+    <filetype.stubBuilder filetype="kotlin_builtins" implementationClass="com.intellij.psi.impl.compiled.ClassFileStubBuilder"/>
+    <filetype.decompiler filetype="kotlin_builtins" implementationClass="com.intellij.psi.impl.compiled.ClassFileDecompiler"/>
+
+    <pathMacroExpandableProtocol protocol="kotlin-js-meta"/>
+
+    <deadCode implementation="org.jetbrains.kotlin.idea.inspections.KotlinJUnitStaticEntryPoint"/>
+
+    <externalSystemTaskNotificationListener implementation="org.jetbrains.kotlin.idea.configuration.KotlinExternalSystemSyncListener"/>
+
+    <!--kotlin script specific extensions-->
+    <java.shortNamesCache implementation="org.jetbrains.kotlin.idea.core.script.dependencies.JavaClassesInScriptDependenciesShortNameCache"/>
+    <indexedRootsProvider implementation="org.jetbrains.kotlin.idea.core.script.dependencies.KotlinScriptDependenciesIndexableSetContributor"/>
+    <psi.clsCustomNavigationPolicy implementation="org.jetbrains.kotlin.idea.core.script.dependencies.ScriptDependencySourceNavigationPolicyForJavaClasses"/>
+    <resolveScopeProvider implementation="org.jetbrains.kotlin.idea.core.script.dependencies.KotlinScriptResolveScopeProvider"/>
+
+  </extensions>
+
+  <xi:include href="tipsAndTricks.xml" xpointer="xpointer(/idea-plugin/*)"/>
+
+  <xi:include href="extensions/ide.xml" xpointer="xpointer(/idea-plugin/*)"/>
+
+  <extensionPoints>
+    <xi:include href="extensions/common.xml" xpointer="xpointer(/idea-plugin/extensionPoints/*)"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <xi:include href="extensions/kotlin2jvm.xml" xpointer="xpointer(/idea-plugin/extensions/*)"/>
+    <xi:include href="extensions/kotlin2js.xml" xpointer="xpointer(/idea-plugin/extensions/*)"/>
+    <quickFixContributor implementation="org.jetbrains.kotlin.idea.quickfix.QuickFixRegistrar"/>
+
+    <declarationAttributeAltererExtension implementation="org.jetbrains.kotlin.allopen.ide.IdeAllOpenDeclarationAttributeAltererExtension"/>
+
+    <storageComponentContainerContributor implementation="org.jetbrains.kotlin.samWithReceiver.ide.IdeSamWithReceiverComponentContributor"/>
+
+    <classBuilderFactoryInterceptorExtension implementation="org.jetbrains.kotlin.noarg.NoArgClassBuilderInterceptorExtension"/>
+    <storageComponentContainerContributor implementation="org.jetbrains.kotlin.noarg.ide.IdeNoArgComponentContainerContributor"/>
+    <defaultErrorMessages implementation="org.jetbrains.kotlin.noarg.diagnostic.DefaultErrorMessagesNoArg"/>
+    <versionInfoProvider implementation="org.jetbrains.kotlin.idea.facet.KotlinVersionInfoProviderByModuleDependencies"/>
+  </extensions>
+
+</idea-plugin>
