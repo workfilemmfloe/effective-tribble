@@ -1,0 +1,1 @@
+Class/object property type (2: 14) val <T> foo: T

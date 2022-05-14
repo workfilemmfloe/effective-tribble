@@ -1,0 +1,146 @@
+== doSmth ==
+fun doSmth() {}
+---------------------
+=====================
+== doSmth1 ==
+fun doSmth1() {}
+---------------------
+=====================
+== doSmth2 ==
+fun doSmth2() {}
+---------------------
+=====================
+== cond ==
+fun cond() {}
+---------------------
+=====================
+== testCopy1 ==
+fun testCopy1() : Int {
+    try {
+        doSmth()
+    }
+    catch (e: NullPointerException) {
+        doSmth1()
+    }
+    catch (e: Exception) {
+        doSmth2()
+    }
+    finally {
+        return 1
+    }
+}
+---------------------
+                                                                                                                             <v1>: *                           NEW: magic[CATCH_FROM_TRY](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 }) -> <v1>
+                                                                                                                             <v2>: {<: NullPointerException}   NEW: magic[FAKE_INITIALIZER](e: NullPointerException) -> <v2>
+                                                                                                                             <v4>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 }) -> <v4>
+                                                                                                                             <v5>: {<: Exception}              NEW: magic[FAKE_INITIALIZER](e: Exception) -> <v5>
+                                                                                                                             <v7>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 }) -> <v7>
+doSmth()                                                                                                                     <v0>: *                           NEW: call(doSmth(), doSmth) -> <v0>
+{ doSmth() }                                                                                                                 <v0>: *                           COPY
+doSmth1()                                                                                                                    <v3>: *                           NEW: call(doSmth1(), doSmth1) -> <v3>
+{ doSmth1() }                                                                                                                <v3>: *                           COPY
+doSmth2()                                                                                                                    <v6>: *                           NEW: call(doSmth2(), doSmth2) -> <v6>
+{ doSmth2() }                                                                                                                <v6>: *                           COPY
+1                                                                                                                            <v8>: Int                         NEW: r(1) -> <v8>
+return 1                                                                                                                     !<v9>: *
+{ return 1 }                                                                                                                 !<v9>: *                          COPY
+try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 }       <v10>: *                          NEW: merge(try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 }|<v0>, <v3>, <v6>) -> <v10>
+{ try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { return 1 } }   <v10>: *                          COPY
+=====================
+== testCopy2 ==
+fun testCopy2() {
+    while (cond()) {
+        try {
+            doSmth()
+        }
+        catch (e: NullPointerException) {
+            doSmth1()
+        }
+        catch (e: Exception) {
+            doSmth2()
+        }
+        finally {
+            if (cond()) return
+            else continue
+        }
+    }
+}
+---------------------
+                                                                                                                                                                        <v2>: *                           NEW: magic[CATCH_FROM_TRY](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue }) -> <v2>
+                                                                                                                                                                        <v3>: {<: NullPointerException}   NEW: magic[FAKE_INITIALIZER](e: NullPointerException) -> <v3>
+                                                                                                                                                                        <v5>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue }) -> <v5>
+                                                                                                                                                                        <v6>: {<: Exception}              NEW: magic[FAKE_INITIALIZER](e: Exception) -> <v6>
+                                                                                                                                                                        <v8>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue }) -> <v8>
+cond()                                                                                                                                                                  <v0>: Boolean                     NEW: call(cond(), cond) -> <v0>                                                                                                                                                     
+doSmth()                                                                                                                                                                <v1>: *                           NEW: call(doSmth(), doSmth) -> <v1>                                                                                                                                                 
+{ doSmth() }                                                                                                                                                            <v1>: *                           COPY                                                                                                                                                                                
+doSmth1()                                                                                                                                                               <v4>: *                           NEW: call(doSmth1(), doSmth1) -> <v4>
+{ doSmth1() }                                                                                                                                                           <v4>: *                           COPY
+doSmth2()                                                                                                                                                               <v7>: *                           NEW: call(doSmth2(), doSmth2) -> <v7>
+{ doSmth2() }                                                                                                                                                           <v7>: *                           COPY
+cond()                                                                                                                                                                  <v9>: Boolean                     NEW: call(cond(), cond) -> <v9>
+return                                                                                                                                                                  !<v10>: *
+continue                                                                                                                                                                !<v11>: *
+if (cond()) return else continue                                                                                                                                        <v12>: *                          NEW: merge(if (cond()) return else continue|!<v10>, !<v11>) -> <v12>
+{ if (cond()) return else continue }                                                                                                                                    <v12>: *                          COPY
+try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue }                          <v13>: *                          NEW: merge(try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue }|<v1>, <v4>, <v7>) -> <v13>
+{ try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue } }                      <v13>: *                          COPY
+while (cond()) { try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue } }       !<v14>: *
+{ while (cond()) { try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { if (cond()) return else continue } } }   !<v14>: *                         COPY
+=====================
+== testCopy3 ==
+fun testCopy3() {
+    try {
+        doSmth()
+    }
+    catch (e: NullPointerException) {
+        doSmth1()
+    }
+    catch (e: Exception) {
+        doSmth2()
+    }
+    finally {
+        while (cond());
+    }
+}
+---------------------
+                                                                                                                                    <v1>: *                           NEW: magic[CATCH_FROM_TRY](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); }) -> <v1>
+                                                                                                                                    <v2>: {<: NullPointerException}   NEW: magic[FAKE_INITIALIZER](e: NullPointerException) -> <v2>
+                                                                                                                                    <v4>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); }) -> <v4>
+                                                                                                                                    <v5>: {<: Exception}              NEW: magic[FAKE_INITIALIZER](e: Exception) -> <v5>
+                                                                                                                                    <v7>: *                           NEW: magic[OUT_OF_CATCH](try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); }) -> <v7>
+doSmth()                                                                                                                            <v0>: *                           NEW: call(doSmth(), doSmth) -> <v0>
+{ doSmth() }                                                                                                                        <v0>: *                           COPY
+doSmth1()                                                                                                                           <v3>: *                           NEW: call(doSmth1(), doSmth1) -> <v3>
+{ doSmth1() }                                                                                                                       <v3>: *                           COPY
+doSmth2()                                                                                                                           <v6>: *                           NEW: call(doSmth2(), doSmth2) -> <v6>
+{ doSmth2() }                                                                                                                       <v6>: *                           COPY
+cond()                                                                                                                              <v8>: Boolean                     NEW: call(cond(), cond) -> <v8>
+while (cond())                                                                                                                      !<v9>: *
+{ while (cond()); }                                                                                                                 !<v9>: *                          COPY
+try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); }       <v10>: *                          NEW: merge(try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); }|<v0>, <v3>, <v6>) -> <v10>
+{ try { doSmth() } catch (e: NullPointerException) { doSmth1() } catch (e: Exception) { doSmth2() } finally { while (cond()); } }   <v10>: *                          COPY
+=====================
+== doTestCopy4 ==
+fun doTestCopy4(list: List<String>?) : Int {
+    try {
+        doSmth()
+    }
+    finally {
+        if(list != null) {
+        }
+    }
+}
+---------------------
+                                                        <v0>: {<: List<String>?}   NEW: magic[FAKE_INITIALIZER](list: List<String>?) -> <v0>                 
+doSmth()                                                <v1>: *                    NEW: call(doSmth(), doSmth) -> <v1>                                       
+{ doSmth() }                                            <v1>: *                    COPY                                                                      
+list                                                    <v2>: *                    NEW: r(list) -> <v2>                                                      
+null                                                    <v3>: *                    NEW: r(null) -> <v3>                                                      
+list != null                                            <v4>: Boolean              NEW: call(list != null, equals|<v2>, <v3>) -> <v4>                        
+{ }                                                     !<v5>: *                                                                                             
+if(list != null) { }                                    <v6>: *                    NEW: merge(if(list != null) { }|!<v5>) -> <v6>                            
+{ if(list != null) { } }                                <v6>: *                    COPY                                                                      
+try { doSmth() } finally { if(list != null) { } }       <v7>: *                    NEW: merge(try { doSmth() } finally { if(list != null) { } }|<v1>) -> <v7>
+{ try { doSmth() } finally { if(list != null) { } } }   <v7>: *                    COPY                                                                      
+=====================
