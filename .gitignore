@@ -1,0 +1,17 @@
+.DS_Store
+.idea/shelf
+/android.tests.dependencies
+/confluence/target
+/dependencies
+/dist
+/gh-pages
+/ideaSDK
+/android-studio/sdk
+out
+/pluginPublisher/idea*
+/pluginPublisher/plugin-verifier.jar
+tmp
+workspace.xml
+*.versionsBackup
+/idea/testData/debugger/tinyApp/classes*
+/jps-plugin/testData/kannotator

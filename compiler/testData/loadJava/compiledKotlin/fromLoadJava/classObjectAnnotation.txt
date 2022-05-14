@@ -1,0 +1,13 @@
+package test
+
+internal final class Some {
+    /*primary*/ public constructor Some()
+
+    test.Some.Companion.TestAnnotation() internal companion object Companion {
+        /*primary*/ private constructor Companion()
+
+        internal final annotation class TestAnnotation : kotlin.Annotation {
+            /*primary*/ public constructor TestAnnotation()
+        }
+    }
+}
