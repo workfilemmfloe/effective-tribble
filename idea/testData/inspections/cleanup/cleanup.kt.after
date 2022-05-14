@@ -1,0 +1,42 @@
+interface Foo {
+}
+
+enum class E {
+    First, Second
+}
+
+enum class F(val name: String) {
+    First("First"),
+    Second("Second")
+}
+
+val f = { a: Int, b: Int -> a + b }
+
+class A private constructor()
+
+val x = fun(x: String) { }
+
+fun foo() {
+    loop@
+    for (i in 1..100) {
+        val v = bar(i + 2)
+        /* comment */
+        continue@loop
+    }
+
+    bar(bar(10 + 2) + 1)
+}
+
+fun unnecessarySafeCall(x: String) {
+    x.length()
+}
+
+fun unnecessaryExclExcl(x: String) {
+    x.length()
+}
+
+fun unnecessaryCast(x: String) = x
+
+fun unnecessaryElvis(x: String) = x
+
+JavaAnn(1, arg1 = "abc") class MyClass

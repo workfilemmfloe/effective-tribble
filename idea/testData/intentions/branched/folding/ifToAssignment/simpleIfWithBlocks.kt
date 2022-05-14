@@ -1,0 +1,15 @@
+fun doSomething<T>(a: T) {}
+
+fun test(n: Int): String {
+    var res: String
+
+    <caret>if (n == 1) {
+        doSomething("***")
+        res = "one"
+    } else {
+        doSomething("***")
+        res = "two"
+    }
+
+    return res
+}

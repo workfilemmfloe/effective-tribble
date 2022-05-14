@@ -1,0 +1,6 @@
+package test
+
+internal interface A {
+    internal open val v: kotlin.String
+        internal open fun <get-v>(): kotlin.String
+}

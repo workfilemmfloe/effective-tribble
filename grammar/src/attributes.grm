@@ -1,0 +1,23 @@
+/**
+## Annotations
+*/
+
+annotations
+  : (annotation | annotationList)*
+  ;
+
+annotation
+  : annotationPrefix? unescapedAnnotation
+  ;
+
+annotationList
+  : annotationPrefix "[" unescapedAnnotation+ "]"
+  ;
+
+annotationPrefix:
+  : ("@" (":" "file")?)
+  ;
+
+unescapedAnnotation
+  : SimpleName{"."} typeArguments? valueArguments?
+  ;

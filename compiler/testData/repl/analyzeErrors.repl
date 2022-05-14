@@ -1,0 +1,7 @@
+>>> fun foo() = 765
+>>> foo(1)
+/line2.kts:1:5: error: too many arguments for internal final fun foo(): kotlin.Int defined in <script>
+foo(1)
+    ^
+>>> foo()
+765

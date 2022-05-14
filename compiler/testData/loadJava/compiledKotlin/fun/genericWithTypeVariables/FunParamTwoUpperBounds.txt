@@ -1,0 +1,9 @@
+package test
+
+internal fun </*0*/ T : test.Foo> foo(): kotlin.Unit where T : test.Bar
+
+internal interface Bar {
+}
+
+internal interface Foo {
+}

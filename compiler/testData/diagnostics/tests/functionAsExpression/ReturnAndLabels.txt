@@ -1,0 +1,4 @@
+package
+
+internal val label_fun: () -> kotlin.Unit
+internal val parenthesized_label_fun: () -> kotlin.Unit

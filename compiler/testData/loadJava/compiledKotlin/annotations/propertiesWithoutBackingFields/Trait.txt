@@ -1,0 +1,10 @@
+package test
+
+internal final annotation class Anno : kotlin.Annotation {
+    /*primary*/ public constructor Anno()
+}
+
+internal interface Trait {
+    test.Anno() internal abstract val property: kotlin.Int
+        internal abstract fun <get-property>(): kotlin.Int
+}

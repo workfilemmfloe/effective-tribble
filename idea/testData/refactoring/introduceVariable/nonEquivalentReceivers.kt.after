@@ -1,0 +1,18 @@
+class A {
+    val value : Int = 0
+}
+
+fun foo(body: A.() -> Unit) {}
+
+fun bar() {
+    foo {
+        val value = value
+        print(value)
+        print(value)
+    }
+
+    foo {
+        print(value)
+        print(value)
+    }
+}
