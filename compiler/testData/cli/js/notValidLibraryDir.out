@@ -1,0 +1,2 @@
+ERROR: 'compiler/testData/integration/ant/js/simpleWithStdlibAndFolderAsAnotherLib' is not a valid Kotlin Javascript library
+COMPILATION_ERROR

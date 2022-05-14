@@ -1,0 +1,13 @@
+/**
+### Enum classes
+
+See [Enum classes](enum-classes.html)
+*/
+
+enumClassBody
+  : "{" (enumEntry | memberDeclaration)* "}"
+  ;
+
+enumEntry
+  : modifiers SimpleName (":" initializer{","})? classBody?
+  ;

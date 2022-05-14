@@ -1,0 +1,13 @@
+// From KT-1648
+trait A {
+    val method:() -> Unit?
+}
+
+fun some() : A {
+    return object : A {
+        override val method: () -> Unit?
+            get() = <selection><caret>throw UnsupportedOperationException()</selection>
+    }
+}
+
+// TODO: need better selection and caret
