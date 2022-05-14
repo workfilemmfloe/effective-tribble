@@ -1,0 +1,16 @@
+// FILE: 1.kt
+// LANGUAGE_VERSION: 1.2
+// SKIP_INLINE_CHECK_IN: inlineFun$default
+package test
+
+inline fun inlineFun(lambda: () -> Any = { "OK" as Any }): Any {
+    return lambda()
+}
+
+// FILE: 2.kt
+
+import test.*
+
+fun box(): String {
+    return inlineFun() as String
+}
