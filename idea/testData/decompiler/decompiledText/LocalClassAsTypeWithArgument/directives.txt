@@ -1,0 +1,2 @@
+// See KT-13691
+// IGNORE_BACKEND: JS

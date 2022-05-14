@@ -1,0 +1,17 @@
+// TODO: enable JS backend when issue KT-14535 is fixed
+// IGNORE_BACKEND: JS
+class A {
+}
+
+operator fun A.component1() = 1
+operator fun A.component2() = 2
+
+fun box() : String {
+    var (a, b) = A()
+
+    fun local() {
+        a = 3
+    }
+    local()
+    return if (a == 3 && b == 2) "OK" else "fail"
+}
