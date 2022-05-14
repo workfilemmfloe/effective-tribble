@@ -1,0 +1,56 @@
+== test ==
+fun test() : Unit {
+    try {
+        test()
+    } catch (any : Exception) {
+        test()
+    } finally {
+        test()
+    }
+}
+---------------------
+L0:
+  1 <START>
+  2 mark({ try { test() } catch (any : Exception) { test() } finally { test() } })
+    mark(try { test() } catch (any : Exception) { test() } finally { test() })
+    jmp?(L2)                                                                                               NEXT:[v(any : Exception), jmp?(L4)]
+    jmp?(L4)                                                                                               NEXT:[mark({ test() }), mark({ test() })]
+  3 mark({ test() })
+    mark(test())
+    call(test(), test) -> <v0>
+  2 jmp?(L3)                                                                                               NEXT:[magic[CATCH_FROM_TRY](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v1>, jmp?(L4)]
+    jmp?(L4)                                                                                               NEXT:[mark({ test() }), jmp(L5)]
+    jmp(L5)                                                                                                NEXT:[jmp(L6)]
+L3 [beforeCatchFromTryMagic]:
+    magic[CATCH_FROM_TRY](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v1>    PREV:[jmp?(L3)]
+L2 [onException]:
+  3 v(any : Exception)                                                                                     PREV:[jmp?(L2), magic[CATCH_FROM_TRY](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v1>]
+    magic[FAKE_INITIALIZER](any : Exception) -> <v2>
+    w(any|<v2>)
+  4 mark({ test() })
+    mark(test())
+    call(test(), test) -> <v3>
+  3 magic[OUT_OF_CATCH](try { test() } catch (any : Exception) { test() } finally { test() }) -> <v4>
+    jmp(L5)
+L5 [afterCatches]:
+  2 jmp(L6)                                                                                                NEXT:[mark({ test() })]                                                                                                 PREV:[jmp(L5), jmp(L5)]
+L4 [onExceptionToFinallyBlock]:
+L7 [start finally]:
+  3 mark({ test() })                                                                                       PREV:[jmp?(L4), jmp?(L4)]
+    mark(test())
+    call(test(), test) -> <v5>
+L8 [finish finally]:
+  2 jmp(error)                                                                                             NEXT:[<ERROR>]
+L6 [skipFinallyToErrorBlock]:
+L9 [copy of L4, onExceptionToFinallyBlock]:
+  3 mark({ test() })                                                                                       PREV:[jmp(L6)]
+    mark(test())
+    call(test(), test) -> <v5>
+  2 merge(try { test() } catch (any : Exception) { test() } finally { test() }|<v0>, <v3>) -> <v6>
+L1:
+  1 <END>                                                                                                  NEXT:[<SINK>]
+error:
+    <ERROR>                                                                                                PREV:[jmp(error)]
+sink:
+    <SINK>                                                                                                 PREV:[<ERROR>, <END>]
+=====================
