@@ -1,0 +1,9 @@
+// ERROR: Property must be initialized
+class Owner {
+}
+
+var Owner.p: Int
+    get() { return 1 }
+    set(value) {
+        <caret><selection>throw UnsupportedOperationException()</selection>
+    }

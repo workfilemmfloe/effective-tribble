@@ -1,0 +1,8 @@
+package test
+
+internal interface TheTrait {
+
+    public companion object Companion {
+        /*primary*/ private constructor Companion()
+    }
+}

@@ -1,0 +1,34 @@
+JetFile: DocCommentAfterFileAnnotations.kt
+  FILE_ANNOTATION_LIST
+    ANNOTATION
+      PsiElement(LBRACKET)('[')
+      PsiElement(file)('file')
+      PsiElement(COLON)(':')
+      ANNOTATION_ENTRY
+        CONSTRUCTOR_CALLEE
+          TYPE_REFERENCE
+            USER_TYPE
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('volatile')
+      PsiElement(RBRACKET)(']')
+  PACKAGE_DIRECTIVE
+    <empty list>
+  IMPORT_LIST
+    <empty list>
+  PsiWhiteSpace('\n')
+  CLASS
+    KDoc
+      PsiElement(KDOC_START)('/**')
+      PsiWhiteSpace('\n ')
+      KDOC_SECTION
+        PsiElement(KDOC_LEADING_ASTERISK)('*')
+        PsiElement(KDOC_TEXT)(' Doc comment')
+      PsiWhiteSpace('\n ')
+      PsiElement(KDOC_END)('*/')
+    PsiWhiteSpace('\n')
+    PsiElement(class)('class')
+    PsiWhiteSpace(' ')
+    PsiElement(IDENTIFIER)('C')
+    CLASS_BODY
+      PsiElement(LBRACE)('{')
+      PsiElement(RBRACE)('}')
