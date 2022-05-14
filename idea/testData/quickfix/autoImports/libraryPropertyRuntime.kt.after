@@ -1,0 +1,9 @@
+// "Import" "true"
+
+package test
+
+import kotlin.test.asserter
+
+fun foo() {
+    asserter
+}
