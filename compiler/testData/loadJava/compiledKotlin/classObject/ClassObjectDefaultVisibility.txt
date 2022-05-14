@@ -1,0 +1,25 @@
+package test
+
+internal final class Int {
+    /*primary*/ public constructor Int()
+
+    internal class object Default {
+        /*primary*/ private constructor Default()
+    }
+}
+
+private final class Pri {
+    /*primary*/ public constructor Pri()
+
+    private class object Default {
+        /*primary*/ private constructor Default()
+    }
+}
+
+public final class Pub {
+    /*primary*/ public constructor Pub()
+
+    public class object Default {
+        /*primary*/ private constructor Default()
+    }
+}

@@ -1,0 +1,17 @@
+package test
+
+internal final annotation class Anno : kotlin.Annotation {
+    /*primary*/ public constructor Anno()
+}
+
+internal final class Class {
+    /*primary*/ public constructor Class()
+
+    internal class object Default {
+        /*primary*/ private constructor Default()
+
+        test.Anno() internal final class Nested {
+            /*primary*/ public constructor Nested()
+        }
+    }
+}

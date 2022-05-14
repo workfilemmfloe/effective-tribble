@@ -1,0 +1,10 @@
+//KT-1602
+import lib.ArrayFactory
+
+public class Impl : ArrayFactory {
+    override fun create(): lib.Array {
+        <selection><caret>throw UnsupportedOperationException()</selection>
+    }
+}
+
+val array: Array<String>

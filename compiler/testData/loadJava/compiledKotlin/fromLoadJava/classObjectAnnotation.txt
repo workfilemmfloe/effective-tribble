@@ -1,0 +1,13 @@
+package test
+
+internal final class Some {
+    /*primary*/ public constructor Some()
+
+    test.Some.TestAnnotation() internal class object Default {
+        /*primary*/ private constructor Default()
+
+        internal final annotation class TestAnnotation : kotlin.Annotation {
+            /*primary*/ public constructor TestAnnotation()
+        }
+    }
+}

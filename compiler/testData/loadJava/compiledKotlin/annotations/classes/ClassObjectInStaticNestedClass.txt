@@ -1,0 +1,15 @@
+package test
+
+internal final class A {
+    /*primary*/ public constructor A()
+
+    internal final class B {
+        /*primary*/ public constructor B()
+
+        internal class object Default {
+            /*primary*/ private constructor Default()
+            internal final val TEST: kotlin.Int = 1
+                internal final fun <get-TEST>(): kotlin.Int
+        }
+    }
+}
