@@ -1,0 +1,58 @@
+== foo ==
+fun foo(c: Collection<Int>) {
+    for (e in c) {
+        {
+            break
+        }
+    }
+}
+---------------------
+L0:
+  1 <START>
+    v(c: Collection<Int>)
+    magic[FAKE_INITIALIZER](c: Collection<Int>) -> <v0>
+    w(c|<v0>)
+  2 mark({ for (e in c) { { break } } })
+  3 r(c) -> <v1>
+    v(e)
+L2 [loop entry point]:
+L6 [condition entry point]:
+    jmp?(L3)                                               NEXT:[read (Unit), magic[LOOP_RANGE_ITERATION](c|<v1>) -> <v2>]    PREV:[v(e), jmp(L2)]
+    magic[LOOP_RANGE_ITERATION](c|<v1>) -> <v2>
+    w(e|<v2>)
+    mark(for (e in c) { { break } })
+L4 [body entry point]:
+  4 mark({ { break } })
+    mark({ break })
+    jmp?(L7)                                               NEXT:[r({ break }) -> <v3>, d({ break })]
+    d({ break })                                           NEXT:[<SINK>]
+L7 [after local declaration]:
+    r({ break }) -> <v3>                                   PREV:[jmp?(L7)]
+  3 jmp(L2)                                                NEXT:[jmp?(L3)]
+L3 [loop exit point]:
+L5 [body exit point]:
+    read (Unit)                                            PREV:[jmp?(L3), jmp(L3)]
+L1:
+  1 <END>                                                  NEXT:[<SINK>]
+error:
+    <ERROR>                                                PREV:[]
+sink:
+    <SINK>                                                 PREV:[<ERROR>, <END>, d({ break })]
+=====================
+== anonymous_0 ==
+{
+            break
+        }
+---------------------
+L8:
+  5 <START>
+  6 mark(break)
+    jmp(L3)            NEXT:[read (Unit)]
+- 5 ret(*|!<v0>) L9    PREV:[]
+L9:
+    <END>              NEXT:[<SINK>]         PREV:[]
+error:
+    <ERROR>            PREV:[]
+sink:
+    <SINK>             PREV:[<ERROR>, <END>]
+=====================

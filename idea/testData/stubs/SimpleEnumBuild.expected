@@ -1,0 +1,7 @@
+PsiJetFileStubImpl[package=]
+  PACKAGE_DIRECTIVE:
+  CLASS:[fqName=Test, isEnumEntry=false, isInterface=false, isLocal=false, isTopLevel=true, name=Test, superNames=[]]
+    MODIFIER_LIST:[enum]
+    CLASS_BODY:
+      ENUM_ENTRY:[fqName=Test.First, isEnumEntry=true, isInterface=false, isLocal=false, isTopLevel=false, name=First, superNames=[]]
+      ENUM_ENTRY:[fqName=Test.Second, isEnumEntry=true, isInterface=false, isLocal=false, isTopLevel=false, name=Second, superNames=[]]
