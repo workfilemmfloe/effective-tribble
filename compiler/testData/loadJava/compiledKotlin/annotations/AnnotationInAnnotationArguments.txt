@@ -1,0 +1,41 @@
+package test
+
+@test.OptionGroups(o1 = test.StringOptions(option = {"abc", "d", "ef"}), o2 = test.EnumOption(option = E.ENTRY)) public final class AnnotationInAnnotationArguments {
+    /*primary*/ public constructor AnnotationInAnnotationArguments()
+}
+
+public final enum class E : kotlin.Enum<test.E> {
+    enum entry ENTRY
+
+    /*primary*/ private constructor E()
+    public final override /*1*/ /*fake_override*/ val name: kotlin.String
+        public final override /*1*/ /*fake_override*/ fun <get-name>(): kotlin.String
+    public final override /*1*/ /*fake_override*/ val ordinal: kotlin.Int
+        public final override /*1*/ /*fake_override*/ fun <get-ordinal>(): kotlin.Int
+    protected final override /*1*/ /*fake_override*/ fun clone(): kotlin.Any
+    public final override /*1*/ /*fake_override*/ fun compareTo(/*0*/ other: test.E): kotlin.Int
+
+    // Static members
+    public final /*synthesized*/ fun valueOf(/*0*/ value: kotlin.String): test.E
+    public final /*synthesized*/ fun values(): kotlin.Array<test.E>
+}
+
+@kotlin.annotation.annotation() public final class EnumOption : kotlin.Annotation {
+    /*primary*/ public constructor EnumOption(/*0*/ option: test.E)
+    public final val option: test.E
+        public final fun <get-option>(): test.E
+}
+
+@kotlin.annotation.annotation() public final class OptionGroups : kotlin.Annotation {
+    /*primary*/ public constructor OptionGroups(/*0*/ o1: test.StringOptions, /*1*/ o2: test.EnumOption)
+    public final val o1: test.StringOptions
+        public final fun <get-o1>(): test.StringOptions
+    public final val o2: test.EnumOption
+        public final fun <get-o2>(): test.EnumOption
+}
+
+@kotlin.annotation.annotation() public final class StringOptions : kotlin.Annotation {
+    /*primary*/ public constructor StringOptions(/*0*/ vararg option: kotlin.String /*kotlin.Array<out kotlin.String>*/)
+    public final val option: kotlin.Array<out kotlin.String>
+        public final fun <get-option>(): kotlin.Array<out kotlin.String>
+}
