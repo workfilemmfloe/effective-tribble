@@ -1,0 +1,3 @@
+Unclassified usage (5: 32) System.out.println(Foo.CONST);
+Unclassified usage (6: 13) Foo.s();
+Unclassified usage (7: 13) Foo.Companion.f();

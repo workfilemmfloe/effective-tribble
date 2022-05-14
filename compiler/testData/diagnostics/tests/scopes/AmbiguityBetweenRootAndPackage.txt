@@ -1,0 +1,8 @@
+package
+
+public val t: [ERROR : Type for testFun()]
+public fun testFun(): kotlin.Int
+
+package test {
+    public fun testFun(): kotlin.Int
+}
