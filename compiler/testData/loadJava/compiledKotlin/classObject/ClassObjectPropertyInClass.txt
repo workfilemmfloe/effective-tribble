@@ -1,0 +1,13 @@
+package test
+
+internal final class A {
+    /*primary*/ public constructor A()
+    internal final val other: kotlin.Int = 1
+        internal final fun <get-other>(): kotlin.Int
+
+    internal companion object Companion {
+        /*primary*/ private constructor Companion()
+        internal final val some: kotlin.Int = 1
+            internal final fun <get-some>(): kotlin.Int
+    }
+}
