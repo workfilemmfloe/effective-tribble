@@ -1,0 +1,16 @@
+// MOVE: up
+// class A
+enum class A {
+    // U
+    U
+    // V
+    V
+
+    // X
+    X
+    // class B
+    enum class B {
+        // Y
+        Y
+    }
+}
