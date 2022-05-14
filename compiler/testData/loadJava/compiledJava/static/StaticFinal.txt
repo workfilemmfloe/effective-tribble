@@ -1,0 +1,9 @@
+package test
+
+public open class StaticFinal {
+    public constructor StaticFinal()
+}
+
+package test.StaticFinal {
+    public val foo: kotlin.String = "aaa"
+}

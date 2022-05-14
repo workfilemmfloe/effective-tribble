@@ -1,0 +1,6 @@
+{
+  "type": "KOTLIN_FUNCTION",
+  "classFQN": "testing.rename.C",
+  "oldName": "first",
+  "newName": "second"
+}

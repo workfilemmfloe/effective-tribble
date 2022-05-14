@@ -1,0 +1,20 @@
+== bar ==
+fun Int.bar(c: C) {
+    this = c
+}
+---------------------
+L0:
+  1 <START>
+    v(c: C)
+    magic[FAKE_INITIALIZER](c: C) -> <v0>
+    w(c|<v0>)
+  2 mark({ this = c })
+    r(c) -> <v1>
+    magic[UNSUPPORTED_ELEMENT](this = c|<v1>) -> <v2>
+L1:
+  1 <END>                                                NEXT:[<SINK>]
+error:
+    <ERROR>                                              PREV:[]
+sink:
+    <SINK>                                               PREV:[<ERROR>, <END>]
+=====================

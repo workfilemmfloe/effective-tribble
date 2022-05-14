@@ -1,0 +1,1 @@
+fun x(): Int = println(<selection>1</selection>)
