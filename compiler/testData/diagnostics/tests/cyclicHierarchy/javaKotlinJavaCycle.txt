@@ -1,0 +1,16 @@
+package
+
+public/*package*/ /*synthesized*/ fun A(/*0*/ function: () -> kotlin.Unit): A
+public/*package*/ /*synthesized*/ fun C(/*0*/ function: () -> kotlin.Unit): C
+
+public/*package*/ interface A {
+    public abstract fun foo(): kotlin.Unit
+}
+
+public interface B {
+    public abstract fun bar(): kotlin.Unit
+}
+
+public/*package*/ interface C {
+    public abstract fun baz(): kotlin.Unit
+}
