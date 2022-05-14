@@ -1,0 +1,43 @@
+import pack.bar
+import pack.oldFun2 // should not be removed for non-deprecated overload used
+
+interface Foo {
+}
+
+val f = { a: Int, b: Int -> a + b }
+
+class A private constructor()
+
+val x = fun(x: String) { }
+
+fun foo() {
+    loop@
+    for (i in 1..100) {
+        val v = bar(i + 2)
+        /* comment */
+        continue@loop
+    }
+
+    bar(bar(10 + 2) + 1)
+
+    oldFun2()
+
+    ff()
+    val xx = valX
+    varX = 50
+    varY = 60
+}
+
+fun unnecessarySafeCall(x: String) {
+    x.length()
+}
+
+fun unnecessaryExclExcl(x: String) {
+    x.length()
+}
+
+fun unnecessaryCast(x: String) = x
+
+fun unnecessaryElvis(x: String) = x
+
+@JavaAnn(1, arg1 = "abc") class MyClass

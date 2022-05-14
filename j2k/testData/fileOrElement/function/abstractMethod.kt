@@ -1,0 +1,1 @@
+internal abstract fun getNoofGears(): Int

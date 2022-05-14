@@ -1,0 +1,48 @@
+package
+
+public final enum class E : kotlin.Enum<E> {
+    enum entry SUBCLASS
+
+    enum entry PUBLIC
+
+    enum entry PROTECTED
+
+    enum entry PRIVATE
+
+    enum entry INTERNAL
+
+    enum entry ABSTRACT
+
+    enum entry OPEN
+
+    enum entry OVERRIDE
+
+    enum entry FINAL
+
+    enum entry INNER
+
+    @kotlin.annotation.annotation() enum entry ANNOTATION
+
+    enum entry ENUM
+
+    enum entry OUT
+
+    enum entry IN
+
+    enum entry VARARG
+
+    enum entry REIFIED
+
+    private constructor E()
+    protected final override /*1*/ /*fake_override*/ fun clone(): kotlin.Any
+    public final override /*1*/ /*fake_override*/ fun compareTo(/*0*/ other: E): kotlin.Int
+    public final override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public final override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public final override /*1*/ /*fake_override*/ fun name(): kotlin.String
+    public final override /*1*/ /*fake_override*/ fun ordinal(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+
+    // Static members
+    public final /*synthesized*/ fun valueOf(/*0*/ value: kotlin.String): E
+    public final /*synthesized*/ fun values(): kotlin.Array<E>
+}
