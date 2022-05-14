@@ -1,0 +1,83 @@
+import pack.bar
+import pack.oldFun2 // should not be removed for non-deprecated overload used
+import kotlin.reflect.KProperty
+
+class A private constructor()
+
+fun foo() {
+    loop@
+    for (i in 1..100) {
+        // Can't replace oldFun2 because previous fix invalidates element
+        val v = oldFun2(i as Int)
+
+        val other = bar(i + 2)
+
+        /* comment */
+        continue@loop
+    }
+
+    bar(bar(10 + 2) + 1)
+
+    oldFun2()
+
+    1 === 2
+}
+
+fun unnecessarySafeCall(x: String) {
+    x.length
+}
+
+fun unnecessaryExclExcl(x: String) {
+    x.length
+}
+
+fun unnecessaryCast(x: String) = x
+
+fun unnecessaryElvis(x: String) = x
+
+@JavaAnn(1, arg1 = "abc") class MyClass
+
+const val i = 1
+
+annotation class Fancy(val param: Int)
+
+@Fancy(i) class D
+
+class Foo {
+    var x: Int = 0
+        get = field
+        set(value) { field = value }
+}
+
+class CustomDelegate {
+    operator fun getValue(thisRef: Any?, prop: KProperty<*>): String = ""
+    operator fun setValue(thisRef: Any?, prop: KProperty<*>, value: String) {}
+}
+
+class B {
+    var a: String by CustomDelegate()
+
+    operator fun plus(a: A): A = A()
+}
+
+fun foo() {
+    B() + B()
+    B() + B()
+    B() + B()
+}
+
+class C {
+    fun foo() {}
+
+    fun bar() = C::foo
+
+    fun willBeInfix(i: Int) {}
+}
+
+fun <T> typed() {
+}
+
+fun <T> withTypeParameters() where T : Cloneable, T : Comparable<T> {
+}
+
+C() willBeInfix 1
