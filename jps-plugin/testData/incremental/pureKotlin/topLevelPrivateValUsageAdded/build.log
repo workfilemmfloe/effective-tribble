@@ -1,0 +1,14 @@
+Cleaning output files:
+out/production/module/META-INF/module.kotlin_module
+out/production/module/test/UsageKt.class
+End of files
+Compiling files:
+src/usage.kt
+End of files
+COMPILATION FAILED
+Cannot access 'foo': it is 'private' in file
+
+
+Compiling files:
+src/usage.kt
+End of files
