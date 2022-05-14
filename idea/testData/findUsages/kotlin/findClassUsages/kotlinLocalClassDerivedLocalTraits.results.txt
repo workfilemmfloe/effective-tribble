@@ -1,0 +1,2 @@
+Unclassified usage (6: 15) interface T: A
+Unclassified usage (9: 19) interface U: T
