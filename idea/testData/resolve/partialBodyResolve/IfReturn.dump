@@ -1,0 +1,6 @@
+Resolve target: fun kotlin.String.isNotEmpty(): kotlin.Boolean
+----------------------------------------------
+fun foo(p: String) {
+    /* STATEMENT DELETED: if (x()) return */
+    println(p.<caret>isNotEmpty())
+}

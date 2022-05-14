@@ -1,0 +1,21 @@
+fun doSomething<T>(a: T) {}
+
+fun test(n: Int) {
+    var res: String = ""
+
+    <caret>when (n) {
+        1 -> {
+            doSomething("A")
+            res = "one"
+        }
+        2 -> {
+            doSomething("B")
+            res = "two"
+        }
+        else -> {
+            doSomething("C")
+            res = "unknown"
+            return
+        }
+    }
+}

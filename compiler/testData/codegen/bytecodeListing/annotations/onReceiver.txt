@@ -1,0 +1,22 @@
+@kotlin.jvm.internal.KotlinClass A {
+    public synthetic field $kotlinClass: kotlin.reflect.KClass
+    method <clinit>(): void
+    public @org.jetbrains.annotations.NotNull method f(@Ann p0: java.lang.String): java.lang.String
+    public @org.jetbrains.annotations.NotNull method getP(@Ann p0: java.lang.String): java.lang.String
+    public method <init>(): void
+}
+
+@java.lang.annotation.Retention @kotlin.jvm.internal.KotlinClass Ann
+
+@kotlin.jvm.internal.KotlinFileFacade OnReceiverKt {
+    public @org.jetbrains.annotations.NotNull method topLevelF(@Ann p0: java.lang.String): java.lang.String
+    public @org.jetbrains.annotations.NotNull method getTopLevelP(@Ann p0: java.lang.String): java.lang.String
+}
+
+@java.lang.Deprecated @kotlin.jvm.internal.KotlinPackage _DefaultPackage {
+    public synthetic field $kotlinPackage: kotlin.reflect.KPackage
+    public synthetic field $moduleName: java.lang.String
+    method <clinit>(): void
+    public @kotlin.jvm.internal.KotlinDelegatedMethod @org.jetbrains.annotations.NotNull method getTopLevelP(@Ann p0: java.lang.String): java.lang.String
+    public @kotlin.jvm.internal.KotlinDelegatedMethod @org.jetbrains.annotations.NotNull method topLevelF(@Ann p0: java.lang.String): java.lang.String
+}

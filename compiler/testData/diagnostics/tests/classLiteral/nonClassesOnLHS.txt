@@ -1,0 +1,15 @@
+package
+
+public val a1: [ERROR : Unresolved class]
+public val a2: [ERROR : Unresolved class]
+public val l1: [ERROR : Unresolved class]
+public val l2: [ERROR : Unresolved class]
+public val m: [ERROR : Unresolved class]
+public fun </*0*/ T : kotlin.Any> foo(): kotlin.Unit
+
+public final class A {
+    public constructor A()
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
