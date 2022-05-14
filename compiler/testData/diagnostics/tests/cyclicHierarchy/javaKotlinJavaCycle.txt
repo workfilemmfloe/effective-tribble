@@ -1,0 +1,13 @@
+package
+
+public/*package*/ interface A {
+    public abstract fun foo(): kotlin.Unit
+}
+
+public interface B {
+    public abstract fun bar(): kotlin.Unit
+}
+
+public/*package*/ interface C {
+    public abstract fun baz(): kotlin.Unit
+}
