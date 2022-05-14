@@ -1,0 +1,125 @@
+/**
+### Class members
+*/
+
+/*
+class Example(a : Foo, i : Int) : Bar(i), Some {
+
+  // functions
+  abstract fun foo(a : Bar)
+
+  fun foo(a : Bar) = 0
+
+  fun foo(a : Bar) = {
+    return 0
+  }
+
+  fun foo(a : Bar) { // return type is Unit
+
+  // properties
+  val x : Int = 5
+  var y : Double = 7.0d
+  var z : String = "SDfsdf" {
+    get() = $z + "sdfsd"
+    private set(s : String) { $z = s }
+  }
+}
+*/
+
+memberDeclaration
+  : companionObject
+  : object
+  : function
+  : property
+  : class
+  : typeAlias
+  : anonymousInitializer
+  : secondaryConstructor
+  ;
+
+anonymousInitializer
+  : "init" block
+  ;
+
+companionObject
+  : modifiers "companion" "object" SimpleName (":" delegationSpecifier{","})? classBody?
+  ;
+
+valueParameters
+  : "(" functionParameter{","}? ")" // default values
+  ;
+
+functionParameter
+  : modifiers ("val" | "var")? parameter ("=" expression)?
+  ;
+
+initializer
+  : annotations constructorInvocation // type parameters may (must?) be omitted
+  ;
+
+block
+  : "{" statements "}"
+  ;
+
+function
+  : modifiers "fun" typeParameters?
+      (type "." | annotations/*for receiver type*/)?
+      SimpleName
+      typeParameters? valueParameters (":" type)?
+      typeConstraints
+      functionBody?
+  ;
+
+functionBody
+  : block
+  : "=" expression
+  ;
+
+variableDeclarationEntry
+  : SimpleName (":" type)?
+  ;
+
+multipleVariableDeclarations
+  : "(" variableDeclarationEntry{","} ")"
+  ;
+
+property
+  : modifiers ("val" | "var")
+      typeParameters? (type "." | annotations)?
+      (multipleVariableDeclarations | variableDeclarationEntry)
+      typeConstraints
+      ("by" | "=" expression SEMI?)?
+      (getter? setter? | setter? getter?) SEMI?
+  ;
+/**
+See [Properties and Fields](properties.html)
+*/
+
+getter
+  : modifiers "get"
+  : modifiers "get" "(" ")" (":" type)? functionBody
+  ;
+
+setter
+  : modifiers "set"
+  : modifiers "set" "(" modifiers (SimpleName | parameter) ")" functionBody
+  ;
+
+parameter
+  : SimpleName ":" type
+  ;
+
+object
+  : "object" SimpleName primaryConstructor? (":" delegationSpecifier{","})? classBody? // Class body can be optional: this is a declaration
+
+secondaryConstructor
+  : modifiers "constructor" valueParameters (":" constructorDelegationCall)? block
+  ;
+
+constructorDelegationCall
+  : "this" valueArguments
+  : "super" valueArguments
+  ;
+/**
+See [Object expressions and Declarations](object-declarations.html)
+*/
