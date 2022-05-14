@@ -1,0 +1,4 @@
+package
+
+public fun </*0*/ D> test(/*0*/ b: kotlin.Boolean): kotlin.Unit
+public fun </*0*/ T : kotlin.Any> T.foo(): kotlin.Unit
