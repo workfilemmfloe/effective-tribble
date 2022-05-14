@@ -1,0 +1,6 @@
+// "Change return type of enclosing function 'foo' to 'Int'" "true"
+fun foo(n: Int): Int {
+    n.let {
+        return 1
+    }
+}
