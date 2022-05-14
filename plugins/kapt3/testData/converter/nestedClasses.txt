@@ -1,0 +1,46 @@
+public final class Test {
+
+    public Test() {
+        super();
+    }
+
+    public static final class Nested {
+
+        public Nested() {
+            super();
+        }
+
+        public static final class NestedNested {
+
+            public NestedNested() {
+                super();
+            }
+        }
+    }
+
+    public final class Inner {
+
+        public Inner() {
+            super();
+        }
+    }
+
+    public static final class NestedObject {
+        public static final Test.NestedObject INSTANCE = null;
+
+        private NestedObject() {
+            super();
+        }
+    }
+
+    public static abstract interface NestedInterface {
+    }
+
+    public static enum NestedEnum {
+        /*public static final*/ BLACK /* = new BLACK() */,
+        /*public static final*/ WHITE /* = new WHITE() */;
+
+        NestedEnum() {
+        }
+    }
+}
