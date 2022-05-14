@@ -1,0 +1,41 @@
+package
+
+public fun En(): kotlin.Int
+public fun Foo(): kotlin.Int
+
+public final enum class En : kotlin.Enum<En> {
+    enum entry ENTRY
+
+    enum entry SUBCLASS
+
+    private constructor En()
+    public final override /*1*/ /*fake_override*/ val name: kotlin.String
+    public final override /*1*/ /*fake_override*/ val ordinal: kotlin.Int
+    public final fun ENTRY(): kotlin.Int
+    public final fun SUBCLASS(): kotlin.Int
+    protected final override /*1*/ /*fake_override*/ fun clone(): kotlin.Any
+    public final override /*1*/ /*fake_override*/ fun compareTo(/*0*/ other: En): kotlin.Int
+    public final override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public final override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+
+    // Static members
+    @kotlin.Deprecated(level = DeprecationLevel.ERROR, message = "Use 'values()' function instead", replaceWith = kotlin.ReplaceWith(expression = "this.values()", imports = {})) public final /*synthesized*/ val values: kotlin.Array<En>
+    public final /*synthesized*/ fun valueOf(/*0*/ value: kotlin.String): En
+    public final /*synthesized*/ fun values(): kotlin.Array<En>
+}
+
+public object Foo {
+    private constructor Foo()
+    public final fun Bar(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+
+    public object Bar {
+        private constructor Bar()
+        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+    }
+}
