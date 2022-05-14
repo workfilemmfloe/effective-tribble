@@ -1,0 +1,12 @@
+// From KT-1648
+trait A {
+    val method:() -> Unit?
+}
+
+fun some() : A {
+    return object : A {<caret>
+        override val method: () -> Unit? = ?
+    }
+}
+
+// TODO: need better selection and caret

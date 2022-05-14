@@ -1,0 +1,12 @@
+package test
+
+internal trait Bbb</*0*/ P> {
+}
+
+internal final class ClassObjectExtendsTraitWithTP {
+    /*primary*/ public constructor ClassObjectExtendsTraitWithTP()
+
+    internal class object <class-object-for-ClassObjectExtendsTraitWithTP> : test.Bbb<kotlin.String> {
+        /*primary*/ private constructor <class-object-for-ClassObjectExtendsTraitWithTP>()
+    }
+}
