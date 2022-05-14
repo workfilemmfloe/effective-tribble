@@ -1,0 +1,37 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <projectConfigurator implementation="org.jetbrains.kotlin.idea.configuration.KotlinGradleModuleConfigurator"/>
+
+        <versionInfoProvider implementation="org.jetbrains.kotlin.idea.configuration.GradleKotlinVersionInfoProvider"/>
+    </extensions>
+    <extensions defaultExtensionNs="org.jetbrains.plugins.gradle">
+        <frameworkSupport implementation="org.jetbrains.kotlin.idea.configuration.GradleKotlinJavaFrameworkSupportProvider"/>
+        <pluginDescriptions implementation="org.jetbrains.kotlin.idea.configuration.KotlinGradlePluginDescription"/>
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <externalProjectDataService implementation="org.jetbrains.kotlin.idea.configuration.KotlinGradleProjectDataService"/>
+
+        <localInspection
+            implementationClass="org.jetbrains.kotlin.idea.inspections.gradle.DifferentKotlinGradleVersionInspection"
+            displayName="Kotlin Gradle and IDE plugins versions are different"
+            groupName="Kotlin"
+            enabledByDefault="true"
+            language="Groovy"
+            hasStaticDescription="true"
+            level="WARNING"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection
+            implementationClass="org.jetbrains.kotlin.idea.inspections.gradle.DifferentStdlibGradleVersionInspection"
+            displayName="Kotlin library and Gradle plugin versions are different"
+            groupName="Kotlin"
+            enabledByDefault="true"
+            language="Groovy"
+            hasStaticDescription="true"
+            level="WARNING"/>
+
+        <runConfigurationProducer implementation="org.jetbrains.kotlin.idea.run.KotlinTestClassGradleConfigurationProducer"/>
+        <runConfigurationProducer implementation="org.jetbrains.kotlin.idea.run.KotlinTestMethodGradleConfigurationProducer"/>
+    </extensions>
+</idea-plugin>
