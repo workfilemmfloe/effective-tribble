@@ -1,0 +1,6 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <projectConfigurator implementation="org.jetbrains.kotlin.idea.configuration.KotlinJavaMavenConfigurator"/>
+    <projectConfigurator implementation="org.jetbrains.kotlin.idea.configuration.KotlinJavascriptMavenConfigurator"/>
+  </extensions>
+</idea-plugin>

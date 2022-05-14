@@ -1,0 +1,5 @@
+package test
+
+internal interface A {
+    internal open fun f(): kotlin.String
+}

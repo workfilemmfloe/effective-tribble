@@ -1,0 +1,8 @@
+package test
+
+internal interface Aaa</*0*/ P> {
+}
+
+internal final class Bbb : test.Aaa<java.util.Random> {
+    /*primary*/ public constructor Bbb()
+}
