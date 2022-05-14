@@ -1,0 +1,5 @@
+package
+
+public fun castOnCallArguments(): kotlin.Unit
+public fun foo(/*0*/ x: kotlin.Int, /*1*/ y: kotlin.Int?, /*2*/ z: kotlin.Int): kotlin.Int?
+public fun </*0*/ T> myRun(/*0*/ @kotlin.internal.CalledInPlace(count = InvocationCount.EXACTLY_ONCE) block: () -> T): T

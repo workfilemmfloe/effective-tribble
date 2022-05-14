@@ -1,0 +1,4 @@
+package
+
+public fun testSmartcastOnReceiver(/*0*/ x: kotlin.Int?): kotlin.Unit
+@kotlin.internal.Returns(value = ConstantValue.FALSE) public fun @receiver:kotlin.internal.Equals(value = ConstantValue.NOT_NULL) kotlin.Any?.isNull(): kotlin.Boolean
