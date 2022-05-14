@@ -1,0 +1,3 @@
+package test
+
+internal fun fff() : java.util.List<jet.String>
