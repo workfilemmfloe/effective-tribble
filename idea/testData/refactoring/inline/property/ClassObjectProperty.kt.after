@@ -1,0 +1,8 @@
+class Class {
+    companion object {
+    }
+}
+
+fun f() {
+    println(239)
+}

@@ -1,0 +1,24 @@
+package
+
+public fun box(): kotlin.String
+
+public final enum class ProtocolState : kotlin.Enum<ProtocolState> {
+    enum entry WAITING
+
+    enum entry TALKING
+
+    private constructor ProtocolState()
+    public final override /*1*/ /*fake_override*/ val name: kotlin.String
+    public final override /*1*/ /*fake_override*/ val ordinal: kotlin.Int
+    protected final override /*1*/ /*fake_override*/ fun clone(): kotlin.Any
+    public final override /*1*/ /*fake_override*/ fun compareTo(/*0*/ other: ProtocolState): kotlin.Int
+    public final override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public final override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public abstract fun signal(): ProtocolState
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+
+    // Static members
+    @kotlin.Deprecated(message = "Use 'values()' function instead", replaceWith = kotlin.ReplaceWith(expression = "this.values()", imports = {})) public final /*synthesized*/ val values: kotlin.Array<ProtocolState>
+    public final /*synthesized*/ fun valueOf(/*0*/ value: kotlin.String): ProtocolState
+    public final /*synthesized*/ fun values(): kotlin.Array<ProtocolState>
+}
