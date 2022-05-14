@@ -1,0 +1,3 @@
+package test
+
+internal fun ff(/*0*/ p: kotlin.List<java.lang.CharSequence?>): kotlin.Int
