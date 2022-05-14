@@ -1,0 +1,6 @@
+package test
+
+public open class NotNullField : java.lang.Object {
+    public constructor NotNullField()
+    public final var hi : jet.String
+}

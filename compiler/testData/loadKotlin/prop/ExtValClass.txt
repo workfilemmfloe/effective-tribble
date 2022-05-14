@@ -1,0 +1,3 @@
+package test
+
+internal val </*0*/ P> P.anotherJavaClass : java.lang.Class<P>

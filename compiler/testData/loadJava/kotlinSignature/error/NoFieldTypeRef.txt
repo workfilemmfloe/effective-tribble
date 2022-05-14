@@ -1,0 +1,6 @@
+package test
+
+public open class NoFieldTypeRef : java.lang.Object {
+    public constructor NoFieldTypeRef()
+    public final var foo : jet.String?
+}

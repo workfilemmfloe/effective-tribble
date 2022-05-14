@@ -1,0 +1,3 @@
+package test
+
+internal val jet.Int.itIs : jet.Int

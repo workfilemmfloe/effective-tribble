@@ -1,0 +1,10 @@
+package test
+
+internal trait A {
+    internal open var v : jet.String
+}
+
+internal final class B : test.A {
+    /*primary*/ public constructor B()
+    internal open override /*1*/ /*fake_override*/ var v : jet.String
+}

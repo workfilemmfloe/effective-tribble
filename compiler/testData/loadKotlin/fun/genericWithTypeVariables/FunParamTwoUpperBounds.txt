@@ -1,0 +1,9 @@
+package test
+
+internal fun </*0*/ T> foo() : Unit where T : test.Foo, T : test.Bar
+
+internal trait Bar {
+}
+
+internal trait Foo {
+}

@@ -1,0 +1,5 @@
+package test
+
+internal trait A {
+    internal open val v : jet.String
+}

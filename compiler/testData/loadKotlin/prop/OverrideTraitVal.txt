@@ -1,0 +1,10 @@
+package test
+
+internal open class Subclass : test.Trait {
+    /*primary*/ public constructor Subclass()
+    internal open override /*1*/ val shape : jet.String
+}
+
+internal trait Trait {
+    internal abstract val shape : jet.String
+}
