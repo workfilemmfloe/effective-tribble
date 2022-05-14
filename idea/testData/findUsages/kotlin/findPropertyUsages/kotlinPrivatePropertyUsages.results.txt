@@ -1,0 +1,2 @@
+Value read (12: 45) override fun processRequest() = "foo" + foo
+Value read (8: 33) open fun processRequest() = foo
