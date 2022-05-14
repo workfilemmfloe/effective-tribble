@@ -1,0 +1,12 @@
+// "Implement members" "true"
+// WITH_RUNTIME
+// ERROR: Expected interface 'InterfaceWithFuns' has no actual in module light_idea_test_case for JVM
+expect interface InterfaceWithFuns {
+    fun funInInterface()
+}
+
+class ChildOfInterface : InterfaceWithFuns{
+    override fun funInInterface() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+}
