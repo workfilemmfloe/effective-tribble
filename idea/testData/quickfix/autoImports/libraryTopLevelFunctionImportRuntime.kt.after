@@ -1,0 +1,8 @@
+// "Import" "true"
+package some
+
+import kotlin.system.measureNanoTime
+
+fun testFun() {
+  measureNanoTime({})
+}
