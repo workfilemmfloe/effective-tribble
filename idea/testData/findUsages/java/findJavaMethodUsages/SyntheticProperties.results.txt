@@ -1,0 +1,2 @@
+Value read (2: 21) print(javaClass.something)
+Value write (4: 15) javaClass.something++
