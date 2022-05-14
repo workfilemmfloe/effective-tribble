@@ -1,0 +1,16 @@
+package
+
+public open class I {
+    public constructor I()
+    public final fun foo(): kotlin.Unit
+}
+
+public/*package*/ open class J {
+    public/*package*/ constructor J()
+    public/*package*/ open fun bar(): kotlin.Unit
+}
+
+public open class K {
+    public constructor K()
+    public final fun baz(): kotlin.Unit
+}
