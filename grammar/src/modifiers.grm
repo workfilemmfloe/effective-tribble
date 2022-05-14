@@ -1,0 +1,75 @@
+/**
+## Modifiers
+*/
+
+modifiers
+  : modifier*
+  ;
+
+modifier
+  : modifierKeyword
+  ;
+
+modifierKeyword
+  : classModifier
+  : accessModifier
+  : varianceAnnotation
+  : memberModifier
+  : parameterModifier
+  : typeParameterModifier
+  : functionModifier
+  : propertyModifier
+  : annotations
+  ;
+
+classModifier
+  : "abstract"
+  : "final"
+  : "enum"
+  : "open"
+  : "annotation"
+  : "sealed"
+  : "data"
+  ;
+
+memberModifier
+  : "override"
+  : "open"
+  : "final"
+  : "abstract"
+  : "lateinit"
+  ;
+
+accessModifier
+  : "private"
+  : "protected"
+  : "public"
+  : "internal"
+  ;
+
+varianceAnnotation
+  : "in"
+  : "out"
+  ;
+
+parameterModifier
+  : "noinline"
+  : "crossinline"
+  : "vararg"
+  ;
+
+typeParameterModifier
+  : "reified"
+  ;
+
+functionModifier
+  : "tailrec"
+  : "operator"
+  : "infix"
+  : "inline"
+  : "external"
+  ;
+
+propertyModifier
+  : "const"
+  ;
