@@ -1,0 +1,11 @@
+<idea-plugin>
+    <id>org.jetbrains.kotlin</id>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <defaultErrorMessages implementation="org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm"/>
+
+        <classBuilderInterceptorExtension implementation="org.jetbrains.kotlin.annotation.AnnotationCollectorExtension"/>
+
+        <analyzeCompleteHandlerExtension implementation="org.jetbrains.kotlin.resolve.jvm.AnalyzeCompleteHandlerExtension"/>
+    </extensions>
+</idea-plugin>
