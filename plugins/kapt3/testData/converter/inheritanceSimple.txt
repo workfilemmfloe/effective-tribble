@@ -1,0 +1,40 @@
+public abstract interface Context {
+}
+
+////////////////////
+
+
+public enum Result {
+    /*public static final*/ SUCCESS /* = null */,
+    /*public static final*/ ERROR /* = null */;
+
+    Result() {
+    }
+}
+
+////////////////////
+
+
+public abstract class BaseClass {
+
+    public abstract Result doJob();
+
+    public BaseClass(Context context, int num, boolean bool) {
+        super();
+    }
+}
+
+////////////////////
+
+
+public final class Inheritor extends BaseClass {
+
+    @java.lang.Override()
+    public Result doJob() {
+        return null;
+    }
+
+    public Inheritor(Context context) {
+        super(null, 0, false);
+    }
+}
