@@ -1,0 +1,17 @@
+/*
+ * Copy of JVM-backend test
+ * Found at: compiler/testData/codegen/boxInline/capture/captureInlinableAndOther.2.kt
+ */
+
+package test
+
+
+inline fun <R> doWork(crossinline job: ()-> R) : R {
+    val k = 10;
+    return notInline({k; job()})
+}
+
+fun <R> notInline(job: ()-> R) : R {
+    return job()
+}
+
