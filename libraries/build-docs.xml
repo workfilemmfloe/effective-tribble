@@ -1,0 +1,64 @@
+<project name="Kotlin standard library" default="document">
+    <!-- Generates the standard library documentation using Dokka. -->
+    <property name="github.revision" value="master"/>
+    <property name="dokka.path" value="../dependencies/dokka" />
+    <property name="js.stdlib.src.path" value="../dependencies/js-stdlib-src" />
+    <property name="docs.output" value="${basedir}/doc" />
+
+    <typedef resource="dokka-antlib.xml">
+        <classpath>
+            <fileset dir="${dokka.path}/lib">
+                <include name="*.jar"/>
+            </fileset>
+
+            <!-- used for running locally -->
+            <pathelement path="${dokka.path}/out/artifacts/dokka.jar"/>
+        </classpath>
+    </typedef>
+
+    <target name="clean">
+        <delete dir="${docs.output}"/>
+        <mkdir dir="${docs.output}"/>
+    </target>
+
+    <target name="build-js-stdlib-sources">
+        <ant antfile="build.xml" target="pack-js-stdlib-sources" dir=".."/>
+
+        <delete dir="${js.stdlib.src.path}"/>
+        <unzip src="../dist/kotlinc/lib/kotlin-stdlib-js-sources.jar" dest="${js.stdlib.src.path}"/>
+    </target>
+
+    <target name="document" depends="clean,build-js-stdlib-sources">
+        <dokka samples="stdlib/samples/test" outputDir="${docs.output}/jre8" moduleName="kotlin-stdlib" skipDeprecated="true" outputFormat="kotlin-website-samples" jdkversion="8" impliedplatforms="JVM,JS"
+               include="stdlib/src/Module.md">
+
+            <sourceRoot path="stdlib/src" platforms="JVM"/>
+            <sourceRoot path="stdlib/jre7/src" platforms="JVM,JRE7"/>
+            <sourceRoot path="stdlib/jre8/src" platforms="JVM,JRE8"/>
+            <sourceRoot path="../core/builtins" platforms="JVM"/>
+            <sourceRoot path="../core/reflection.jvm" platforms="JVM"/>
+            <sourceRoot path="../core/runtime.jvm/src/kotlin/jvm/annotations" platforms="JVM"/>
+            <sourceRoot path="../core/runtime.jvm/src/kotlin/jvm/JvmClassMapping.kt" platforms="JVM"/>
+            <sourceRoot path="../core/runtime.jvm/src/kotlin/jvm/PurelyImplements.kt" platforms="JVM"/>
+            <sourceRoot path="../core/runtime.jvm/src/kotlin/TypeAliases.kt" platforms="JVM"/>
+
+            <sourceRoot path="../core/builtins" platforms="JS"/>
+            <sourceRoot path="${js.stdlib.src.path}" platforms="JS"/>
+
+            <sourcelink path=".." url="http://github.com/JetBrains/kotlin/blob/${github.revision}" linesuffix="#L"/>
+        </dokka>
+        <dokka outputDir="${docs.output}/jre8" moduleName="kotlin-test" skipDeprecated="true" outputFormat="kotlin-website-samples" jdkversion="8" impliedplatforms="JVM,JS">
+
+            <sourceRoot path="kotlin.test/common/src/main/kotlin" platforms="JVM,JS"/>
+            <sourceRoot path="kotlin.test/jvm/src/main/kotlin" platforms="JVM"/>
+            <sourceRoot path="kotlin.test/js/src/main/kotlin" platforms="JS"/>
+
+            <sourcelink path=".." url="http://github.com/JetBrains/kotlin/blob/${github.revision}" linesuffix="#L"/>
+        </dokka>
+    </target>
+
+    <target name="zip" depends="document">
+        <zip destfile="target/stdlib-docs.zip" basedir="${docs.output}/jre8/kotlin-stdlib"/>
+        <zip destfile="target/kotlin-test-docs.zip" basedir="${docs.output}/jre8/kotlin-test"/>
+    </target>
+</project>
