@@ -1,0 +1,2 @@
+<!-- conflictingOverloadsDefaultPackage2 -->
+Conflicting overloads: public fun foo(x: Int): Int defined in root package, public fun foo(y: Int): Int defined in root package
