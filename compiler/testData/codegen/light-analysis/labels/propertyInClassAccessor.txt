@@ -1,0 +1,11 @@
+@kotlin.Metadata
+public final class PropertyInClassAccessorKt {
+    public final static @org.jetbrains.annotations.NotNull method box(): java.lang.String
+}
+
+@kotlin.Metadata
+public final class Test {
+    public method <init>(): void
+    public final method getInnerGetter(p0: int): int
+    public final method test(): int
+}
