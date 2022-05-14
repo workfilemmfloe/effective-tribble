@@ -1,0 +1,9 @@
+// "Create header class implementation for platform JS" "true"
+
+header enum class MyEnum {
+    FIRST,
+    SECOND,
+    LAST;
+
+    val num: Int
+}
