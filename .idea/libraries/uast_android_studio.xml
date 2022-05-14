@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="uast-android-studio">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ideaSDK/lib/openapi.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ideaSDK/lib/idea.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
