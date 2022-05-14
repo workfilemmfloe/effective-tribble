@@ -1,0 +1,12 @@
+package
+
+public val x: kotlin.Int
+
+public open class Bar {
+    public constructor Bar()
+}
+
+public open class Foo {
+    public constructor Foo()
+    public final val a: kotlin.Int = 1
+}
