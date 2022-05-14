@@ -1,0 +1,8 @@
+package test
+
+internal trait TheTrait {
+
+    internal default object Default {
+        /*primary*/ private constructor Default()
+    }
+}

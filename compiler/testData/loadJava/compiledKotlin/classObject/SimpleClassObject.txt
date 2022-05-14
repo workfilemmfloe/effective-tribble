@@ -1,0 +1,9 @@
+package test
+
+internal final class SimpleClassObject {
+    /*primary*/ public constructor SimpleClassObject()
+
+    internal default object Default {
+        /*primary*/ private constructor Default()
+    }
+}

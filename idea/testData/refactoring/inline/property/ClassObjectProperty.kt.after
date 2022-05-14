@@ -1,0 +1,8 @@
+class Class {
+    default object {
+    }
+}
+
+fun f() {
+    println(239)
+}

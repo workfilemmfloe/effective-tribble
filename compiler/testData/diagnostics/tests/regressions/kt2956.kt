@@ -1,0 +1,1 @@
+val a: String = <!NO_DEFAULT_OBJECT!>Nothing<!>

@@ -1,0 +1,16 @@
+package test
+
+internal final annotation class Anno : kotlin.Annotation {
+    /*primary*/ public constructor Anno()
+}
+
+internal final class Class {
+    /*primary*/ public constructor Class()
+
+    internal default object Default {
+        /*primary*/ private constructor Default()
+        test.Anno() internal final var property: kotlin.Int
+            internal final fun <get-property>(): kotlin.Int
+            internal final fun <set-property>(/*0*/ <set-?>: kotlin.Int): kotlin.Unit
+    }
+}
