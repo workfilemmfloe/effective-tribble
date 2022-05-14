@@ -1,0 +1,9 @@
+package
+
+package a {
+    public val x: kotlin.Int = 1
+}
+
+package b {
+    public val y: kotlin.Int = 1
+}
