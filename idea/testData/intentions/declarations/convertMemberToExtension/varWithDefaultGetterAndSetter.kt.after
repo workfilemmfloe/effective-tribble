@@ -1,0 +1,10 @@
+// WITH_RUNTIME
+// SKIP_ERRORS_BEFORE
+class Owner {
+}
+
+var Owner.p: Int
+    get() = <caret><selection>throw UnsupportedOperationException()</selection>
+    set(value) {
+        throw UnsupportedOperationException()
+    }
