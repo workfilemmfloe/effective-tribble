@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="junit-plugin">
+    <ANNOTATIONS>
+      <root url="file://$PROJECT_DIR$/annotations" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ideaSDK/plugins/junit/lib/idea-junit.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/ideaSDK/sources/sources.zip!/plugins/junit/src" />
+    </SOURCES>
+  </library>
+</component>

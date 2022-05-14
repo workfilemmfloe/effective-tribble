@@ -1,0 +1,8 @@
+package test
+
+public open class StaticFinal {
+    public constructor StaticFinal()
+
+    // Static members
+    public final val foo: kotlin.String = "aaa"
+}
