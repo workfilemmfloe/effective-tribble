@@ -1,0 +1,9 @@
+package test
+
+internal fun </*0*/ T : test.Foo> foo(): jet.Unit where T : test.Bar
+
+internal trait Bar {
+}
+
+internal trait Foo {
+}

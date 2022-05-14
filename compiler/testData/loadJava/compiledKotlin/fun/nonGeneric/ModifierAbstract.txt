@@ -1,0 +1,6 @@
+package test
+
+internal abstract class ModifierAbstract {
+    /*primary*/ public constructor ModifierAbstract()
+    internal abstract fun abs(): jet.Int
+}

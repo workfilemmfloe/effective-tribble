@@ -1,0 +1,3 @@
+package test
+
+internal fun fff(): jet.Array<jet.Int>

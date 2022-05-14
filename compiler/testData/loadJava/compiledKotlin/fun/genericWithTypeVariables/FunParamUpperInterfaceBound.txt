@@ -1,0 +1,3 @@
+package test
+
+internal fun </*0*/ A : java.io.Serializable> dos(): jet.Int

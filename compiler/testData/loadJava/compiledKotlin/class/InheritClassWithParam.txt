@@ -1,0 +1,9 @@
+package test
+
+internal abstract class Aaa</*0*/ P> {
+    /*primary*/ public constructor Aaa</*0*/ P>()
+}
+
+internal final class Bbb : test.Aaa<java.util.Random> {
+    /*primary*/ public constructor Bbb()
+}
