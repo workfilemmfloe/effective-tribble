@@ -1,0 +1,20 @@
+JetFile: TypealiasIsKeyword.kt
+  PACKAGE_DIRECTIVE
+    <empty list>
+  IMPORT_LIST
+    <empty list>
+  PROPERTY
+    PsiElement(val)('val')
+    PsiErrorElement:Expecting property name or receiver type
+      <empty list>
+    PsiErrorElement:Property getter or setter expected
+      <empty list>
+  PsiWhiteSpace(' ')
+  PsiErrorElement:Expecting a top level declaration
+    PsiElement(typealias)('typealias')
+  PsiWhiteSpace(' ')
+  PsiErrorElement:Expecting a top level declaration
+    PsiElement(EQ)('=')
+  PsiWhiteSpace(' ')
+  PsiErrorElement:Expecting a top level declaration
+    PsiElement(INTEGER_LITERAL)('0')
