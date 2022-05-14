@@ -1,0 +1,4 @@
+abstract class Owner<T> {
+}
+
+fun Owner<T>.<caret>f<T, R>(t: T, r: R): R = r

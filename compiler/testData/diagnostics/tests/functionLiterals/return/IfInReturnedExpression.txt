@@ -1,0 +1,4 @@
+package
+
+public val a: () -> kotlin.Comparable<out kotlin.Any?>
+public val flag: kotlin.Boolean = true
