@@ -1,0 +1,9 @@
+trait I {
+    fun foo(): String
+}
+
+fun bar()<selection>: I</selection> = object: I {
+    override fun foo(): String {
+        return "a"
+    }
+}

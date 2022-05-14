@@ -1,0 +1,10 @@
+<idea-plugin>
+    <application-components>
+        <component>
+            <implementation-class>org.jetbrains.kotlin.android.OutputParserInitializer</implementation-class>
+        </component>
+    </application-components>
+    <extensions defaultExtensionNs="com.intellij">
+        <gotoDeclarationHandler implementation="org.jetbrains.kotlin.android.navigation.KotlinAndroidGotoDeclarationHandler"/>
+    </extensions>
+</idea-plugin>

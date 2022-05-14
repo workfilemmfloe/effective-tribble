@@ -1,0 +1,9 @@
+package test
+
+internal final class SimpleClassObject {
+    /*primary*/ public constructor SimpleClassObject()
+
+    internal companion object Companion {
+        /*primary*/ private constructor Companion()
+    }
+}
