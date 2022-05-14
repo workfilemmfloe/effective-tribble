@@ -1,0 +1,4 @@
+/kt48935.kt:7:35: warning: parameter 'func' is never used
+fun <T, V> exampleGenericFunction(func: V) where T: Base, V: (T) -> Unit {
+                                  ^
+

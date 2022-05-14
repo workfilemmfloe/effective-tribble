@@ -1,0 +1,24 @@
+STEP 0:
+    dependencies: stdlib
+    modifications:
+        U : proxy.kt.0.txt -> proxy.kt
+    dirty: proxy.kt
+STEP 1..7:
+    dependencies: stdlib
+    flags: FP
+STEP 8:
+    dependencies: stdlib, lib1
+    modifications:
+        U : proxy.kt.1.txt -> proxy.kt
+    dirty: proxy.kt
+STEP 9..15:
+    dependencies: stdlib, lib1
+    dirty: proxy.kt
+STEP 16:
+    dependencies: stdlib, lib1
+    modifications:
+        U : proxy.kt.2.txt -> proxy.kt
+    dirty: proxy.kt
+STEP 17..23:
+    dependencies: stdlib, lib1
+    dirty: proxy.kt

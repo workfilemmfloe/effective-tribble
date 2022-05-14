@@ -1,0 +1,12 @@
+apply plugin: 'org.jetbrains.kotlin.platform.js'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    implementation project(":lib")
+}
+
+def isIrBackend = project.findProperty("kotlin.js.useIrBackend")?.toBoolean() ?: false
+if (isIrBackend) {
+    compileKotlin2Js.kotlinOptions.freeCompilerArgs += ["-Xir-produce-klib-dir", "-Xir-only"]
+    compileTestKotlin2Js.kotlinOptions.freeCompilerArgs += ["-Xir-produce-js"]
+}

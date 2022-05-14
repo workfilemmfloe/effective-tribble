@@ -1,0 +1,1 @@
+interface A : suspend () -> Unit

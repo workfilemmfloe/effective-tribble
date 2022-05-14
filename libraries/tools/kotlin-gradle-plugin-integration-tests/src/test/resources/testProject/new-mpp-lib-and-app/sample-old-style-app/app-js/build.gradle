@@ -1,0 +1,5 @@
+apply plugin: 'org.jetbrains.kotlin.platform.js'
+
+dependencies {
+	implementation 'com.example:sample-lib:1.0'
+}

@@ -1,0 +1,32 @@
+description = 'Kotlin annotations for JVM'
+
+apply plugin: 'kotlin'
+
+JvmToolchain.configureJvmToolchain(project, JdkMajorVersion.JDK_1_6)
+
+configurePublishing(project)
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+dependencies {
+    compileOnly DependenciesKt.kotlinBuiltins(project)
+    kotlinCompilerClasspath project(':libraries:tools:stdlib-compiler-classpath')
+}
+
+configureSourcesJar()
+configureJavadocJar()
+
+compileKotlin {
+    kotlinOptions.freeCompilerArgs = [
+            "-Xallow-kotlin-package",
+    ]
+    kotlinOptions.moduleName = project.name
+}
+
+configureFrontendIr(project)

@@ -1,0 +1,11 @@
+STEP 0..7:
+    dependencies: stdlib, lib1
+    dirty: m.kt
+STEP 8:
+    dependencies: stdlib, lib1, libProxy
+    modifications:
+        U : m.proxy.kt.txt -> m.kt
+    dirty: m.kt
+STEP 9..23:
+    dependencies: stdlib, lib1, libProxy
+    dirty: m.kt

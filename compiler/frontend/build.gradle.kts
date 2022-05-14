@@ -1,0 +1,31 @@
+plugins {
+    kotlin("jvm")
+    id("jps-compatible")
+}
+
+dependencies {
+    api(project(":kotlin-annotations-jvm"))
+    api(project(":core:descriptors"))
+    api(project(":core:deserialization"))
+    api(project(":compiler:util"))
+    api(project(":compiler:config"))
+    api(project(":compiler:container"))
+    api(project(":compiler:resolution"))
+    api(project(":compiler:psi"))
+    api(project(":compiler:frontend.common"))
+    api(project(":compiler:frontend.common-psi"))
+    api(project(":kotlin-script-runtime"))
+    api(commonDependency("io.javaslang","javaslang"))
+    compileOnly(intellijCore())
+    compileOnly(commonDependency("org.jetbrains.intellij.deps:trove4j"))
+    compileOnly(commonDependency("com.google.guava:guava"))
+}
+
+sourceSets {
+    "main" { projectDefault() }
+    "test" {}
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-Xjvm-default=compatibility"
+}

@@ -1,0 +1,45 @@
+KtEnumEntrySymbol:
+  callableIdIfNonLocal: /X.Y
+  containingEnumClassIdIfNonLocal: X
+  isExtension: false
+  name: Y
+  origin: SOURCE
+  receiverType: null
+  returnType: X
+  symbolKind: CLASS_MEMBER
+  getContainingModule: KtSourceModule "Sources of main"
+  deprecationStatus: null
+
+KtEnumEntrySymbol:
+  callableIdIfNonLocal: /X.Z
+  containingEnumClassIdIfNonLocal: X
+  isExtension: false
+  name: Z
+  origin: SOURCE
+  receiverType: null
+  returnType: X
+  symbolKind: CLASS_MEMBER
+  getContainingModule: KtSourceModule "Sources of main"
+  deprecationStatus: null
+
+KtNamedClassOrObjectSymbol:
+  annotationsList: []
+  classIdIfNonLocal: X
+  classKind: ENUM_CLASS
+  companionObject: null
+  isData: false
+  isExternal: false
+  isFun: false
+  isInline: false
+  isInner: false
+  modality: FINAL
+  name: X
+  origin: SOURCE
+  superTypes: [
+    kotlin/Enum<X>
+  ]
+  symbolKind: TOP_LEVEL
+  typeParameters: []
+  visibility: Public
+  getContainingModule: KtSourceModule "Sources of main"
+  deprecationStatus: null

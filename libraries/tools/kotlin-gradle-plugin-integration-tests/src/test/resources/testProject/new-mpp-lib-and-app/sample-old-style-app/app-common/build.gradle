@@ -1,0 +1,5 @@
+apply plugin: 'kotlin-platform-common'
+
+dependencies {
+	implementation 'com.example:sample-lib:1.0'
+}

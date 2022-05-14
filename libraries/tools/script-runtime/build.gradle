@@ -1,0 +1,37 @@
+description 'Kotlin Script Runtime'
+
+apply plugin: 'kotlin'
+
+JvmToolchain.configureJvmToolchain(project, JdkMajorVersion.JDK_1_6)
+
+configurePublishing(project)
+
+dependencies {
+    compileOnly kotlinStdlib()
+    kotlinCompilerClasspath project(':libraries:tools:stdlib-compiler-classpath')
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir "${rootDir}/core/script.runtime/src"
+        }
+    }
+}
+
+jar {
+    manifestAttributes(manifest, project, 'Main')
+}
+
+configureSourcesJar()
+configureJavadocJar()
+
+compileKotlin {
+    kotlinOptions.freeCompilerArgs = [
+        "-Xallow-kotlin-package",
+        "-Xsuppress-deprecated-jvm-target-warning",
+    ]
+    kotlinOptions.moduleName = project.name
+}
+
+configureFrontendIr(project)

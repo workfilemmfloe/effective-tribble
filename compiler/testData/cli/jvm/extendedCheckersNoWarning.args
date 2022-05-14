@@ -1,0 +1,5 @@
+$TESTDATA_DIR$/extendedCheckersNoWarning.kt
+-Xuse-k2
+-Xuse-fir-extended-checkers
+-d
+$TEMP_DIR$
