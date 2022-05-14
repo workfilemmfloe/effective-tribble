@@ -1,0 +1,9 @@
+apply plugin: "kotlin"
+
+repositories {
+  mavenCentral()
+  maven {
+    url 'file://' + pathToKotlinPlugin
+  }
+}
+
