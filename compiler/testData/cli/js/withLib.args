@@ -1,0 +1,5 @@
+$TESTDATA_DIR$/withLib.kt
+-libraries
+compiler/testData/integration/ant/js/simpleWithStdlibAndAnotherLib/jslib-example.jar
+-output
+$TEMP_DIR$/out.js
