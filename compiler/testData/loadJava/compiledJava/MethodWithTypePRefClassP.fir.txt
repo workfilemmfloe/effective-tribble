@@ -1,0 +1,4 @@
+public open class MethodWithTypePRefClassP<P> : R|java/lang/Object| {
+    public final operator fun f(): R|kotlin/Unit|
+
+}
