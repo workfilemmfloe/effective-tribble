@@ -1,0 +1,37 @@
+/**
+ * @KaptMetadata
+ */
+package test;
+
+import java.lang.System;
+
+@kotlin.Metadata()
+public final class AKt {
+
+    public AKt() {
+        super();
+    }
+
+    public static final void foo() {
+    }
+}
+
+////////////////////
+
+/**
+ * @KaptMetadata
+ */
+package test;
+
+import java.lang.System;
+
+@kotlin.Metadata()
+public final class BKt {
+
+    public BKt() {
+        super();
+    }
+
+    public static final void bar() {
+    }
+}
