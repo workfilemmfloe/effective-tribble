@@ -1,0 +1,5 @@
+package kotlin
+
+fun test() {
+    val x = fun() = Result("123").getOrThrow()
+}
