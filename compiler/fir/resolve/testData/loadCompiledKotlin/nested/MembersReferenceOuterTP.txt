@@ -1,0 +1,13 @@
+<P> public final class MembersReferenceOuterTP : R|kotlin/Any| {
+    public constructor()
+
+    public final inner class Inner : R|kotlin/Any| {
+        <Q> public final fun f(): R|kotlin/Unit|
+
+        public final fun g(p: R|P|): R|P|
+
+        public constructor()
+
+    }
+
+}

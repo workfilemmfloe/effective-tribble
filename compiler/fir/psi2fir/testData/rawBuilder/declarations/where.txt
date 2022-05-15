@@ -1,0 +1,9 @@
+FILE: where.kt
+    public? final? interface A : kotlin/Any {
+    }
+    public? final? interface B : kotlin/Any {
+    }
+    <T : A, B> public? final? class C : kotlin/Any {
+        public? constructor(): super<kotlin/Any>()
+
+    }
