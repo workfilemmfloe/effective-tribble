@@ -1,0 +1,2 @@
+public final class MethodReferencesOuterClassTP<P> : R|java/lang/Object| {
+}
