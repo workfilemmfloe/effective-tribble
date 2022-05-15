@@ -1,0 +1,30 @@
+FILE: threeReceivers.kt
+    public final class Bar {
+        public constructor(): super<R|kotlin/Any|>()
+
+        public final fun R|FooBar|.invoke(): R|Bar| {
+            ^invoke this#
+        }
+
+    }
+    public final class Buz {
+        public constructor(): super<R|kotlin/Any|>()
+
+    }
+    public final class FooBar {
+        public constructor(): super<R|kotlin/Any|>()
+
+    }
+    public final class Foo {
+        public constructor(): super<R|kotlin/Any|>()
+
+        public final val R|Buz|.foobar: R|Bar|
+            public get(): R|Bar| {
+                ^ R|/Bar.Bar|()
+            }
+
+        public final fun R|FooBar|.chk(buz: R|Buz|): R|kotlin/Unit| {
+            R|<local>/buz|.R|/Foo.foobar|.R|/Bar.invoke|()
+        }
+
+    }
