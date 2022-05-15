@@ -1,0 +1,5 @@
+package kotlin
+
+fun test() {
+    val x = { Result(true).getOrThrow() }
+}
