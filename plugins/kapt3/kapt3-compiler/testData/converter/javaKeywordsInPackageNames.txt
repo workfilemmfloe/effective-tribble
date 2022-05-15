@@ -1,0 +1,31 @@
+/**
+ * @KaptMetadata
+ */
+package a.b.c;
+
+import java.lang.System;
+
+@kotlin.Metadata()
+public final class A {
+
+    public A() {
+        super();
+    }
+}
+
+////////////////////
+
+/**
+ * @KaptMetadata
+ */
+package a.b.typealias.c;
+
+import java.lang.System;
+
+@kotlin.Metadata()
+public final class E {
+
+    public E() {
+        super();
+    }
+}
