@@ -1,0 +1,10 @@
+// WITH_RUNTIME
+// FIX: Merge call chain to 'withContext(Default)'
+
+package kotlinx.coroutines
+
+suspend fun test() {
+    coroutineScope {
+        withContext(Dispatchers.Default) { 42 }
+    }
+}
