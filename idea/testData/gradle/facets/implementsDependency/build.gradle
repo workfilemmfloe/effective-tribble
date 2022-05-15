@@ -1,0 +1,26 @@
+// !MODULES: project_main, project_test
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1'
+        }
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.0")
+    }
+}
+
+apply plugin: 'kotlin-platform-common'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:1.1.0"
+}
