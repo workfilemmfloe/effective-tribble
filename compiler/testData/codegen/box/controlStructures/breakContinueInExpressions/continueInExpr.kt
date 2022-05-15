@@ -1,0 +1,8 @@
+// IGNORE_BACKEND: WASM
+fun box(): String {
+    var s = "OK"
+    for (i in 1..3) {
+        s = s + if (i<2) "" else continue
+    }
+    return s
+}

@@ -1,0 +1,14 @@
+// IGNORE_BACKEND: WASM
+fun box(): String {
+    var r = ""
+    for (i in 1..1)  {
+        try {
+            r += "O"
+            break
+        } finally {
+            r += "K"
+            continue
+        }
+    }
+    return r
+}
