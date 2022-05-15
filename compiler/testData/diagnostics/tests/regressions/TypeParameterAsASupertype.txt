@@ -1,0 +1,5 @@
+package
+
+public final class A</*0*/ T> {
+    public constructor A</*0*/ T>()
+}
