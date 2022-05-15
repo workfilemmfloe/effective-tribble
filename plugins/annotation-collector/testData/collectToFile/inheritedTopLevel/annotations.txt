@@ -1,0 +1,4 @@
+p org.test 0
+d 0/InheritedTopLevelKt
+a org.jetbrains.annotations.NotNull 0
+m 0 0/InheritedTopLevelKt getTopLevelProperty

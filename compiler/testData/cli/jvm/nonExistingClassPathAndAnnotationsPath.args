@@ -1,0 +1,5 @@
+$TESTDATA_DIR$/simple.kt
+-classpath
+not/existing/path
+-d
+$TEMP_DIR$
