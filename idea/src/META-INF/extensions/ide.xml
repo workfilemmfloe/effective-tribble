@@ -1,0 +1,40 @@
+<idea-plugin>
+    <extensionPoints>
+        <extensionPoint name="updater" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint"/>
+        <extensionPoint name="projectConfigurator" interface="org.jetbrains.kotlin.idea.configuration.KotlinProjectConfigurator"/>
+
+        <extensionPoint name="declarationAttributeAltererExtension"
+                        interface="org.jetbrains.kotlin.extensions.DeclarationAttributeAltererExtension"
+                        area="IDEA_PROJECT"/>
+
+        <extensionPoint name="androidDexer"
+                        interface="org.jetbrains.kotlin.idea.debugger.evaluate.classLoading.AndroidDexer"
+                        area="IDEA_PROJECT"/>
+
+        <extensionPoint name="idePlatformSupport"
+                        interface="org.jetbrains.kotlin.caches.resolve.IdePlatformSupport"/>
+
+        <extensionPoint name="highlighterExtension"
+                        interface="org.jetbrains.kotlin.idea.highlighter.HighlighterExtension"/>
+    </extensionPoints>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <projectConfigurator implementation="org.jetbrains.kotlin.idea.configuration.KotlinJavaModuleConfigurator"/>
+        <projectConfigurator implementation="org.jetbrains.kotlin.idea.configuration.KotlinJsModuleConfigurator"/>
+
+        <!-- diagnosticSuppressor decelerated in common.xml -->
+        <diagnosticSuppressor implementation="org.jetbrains.kotlin.idea.debugger.DiagnosticSuppressorForDebugger"/>
+
+        <scriptDefinitionContributor
+            id="ScriptTemplatesFromCompilerSettingsProvider"
+            implementation="org.jetbrains.kotlin.idea.script.ScriptTemplatesFromCompilerSettingsProvider"/>
+
+        <scriptDefinitionContributor id="StandardScriptDefinitionContributor"
+                                 order="last"
+                                 implementation="org.jetbrains.kotlin.idea.core.script.StandardScriptDefinitionContributor"/>
+
+        <idePlatformSupport implementation="org.jetbrains.kotlin.caches.resolve.JvmPlatformSupport"/>
+        <idePlatformSupport implementation="org.jetbrains.kotlin.caches.resolve.JsPlatformSupport"/>
+        <idePlatformSupport implementation="org.jetbrains.kotlin.caches.resolve.CommonPlatformSupport"/>
+    </extensions>
+</idea-plugin>
