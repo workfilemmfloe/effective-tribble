@@ -1,0 +1,19 @@
+FILE: derivedClass.kt
+    public open class Base<T> : R|kotlin/Any| {
+        public constructor<T>(x: R|T|): R|Base<T>| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val x: R|T| = R|<local>/x|
+            public get(): R|T|
+
+    }
+    public final class Derived<T : R|kotlin/Any|> : R|Base<T>| {
+        public constructor<T : R|kotlin/Any|>(x: R|T|): R|Derived<T>| {
+            super<R|Base<T>|>(R|<local>/x|)
+        }
+
+    }
+    public final fun <T : R|kotlin/Any|> create(x: R|T|): R|Derived<T>| {
+        ^create R|/Derived.Derived|(R|<local>/x|)
+    }
