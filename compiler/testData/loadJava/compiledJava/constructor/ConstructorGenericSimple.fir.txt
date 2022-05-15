@@ -1,0 +1,4 @@
+public open class ConstructorGenericSimple : R|java/lang/Object| {
+    public constructor(p: R|ft<P, P?>|!): R|test/ConstructorGenericSimple|
+
+}

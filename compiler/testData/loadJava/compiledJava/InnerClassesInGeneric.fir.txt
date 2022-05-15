@@ -1,0 +1,2 @@
+public open class InnerClassesInGeneric<P, Q> : R|java/lang/Object| {
+}

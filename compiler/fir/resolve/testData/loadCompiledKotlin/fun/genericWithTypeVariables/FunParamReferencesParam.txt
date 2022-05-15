@@ -1,0 +1,2 @@
+public final fun <P, Q : R|P|> funParamReferencesParam(): R|kotlin/Int|
+
