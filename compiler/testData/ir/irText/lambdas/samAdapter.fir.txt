@@ -1,0 +1,11 @@
+FILE fqName:<root> fileName:/samAdapter.kt
+  FUN name:test1 visibility:public modality:FINAL <> () returnType:kotlin.Unit
+    BLOCK_BODY
+      VAR name:hello type:IrErrorType [val]
+        ERROR_CALL 'Unresolved reference: <Unresolved name: Runnable>#' type=IrErrorType
+          FUN_EXPR type=IrErrorType origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> () returnType:IrErrorType
+              BLOCK_BODY
+                ERROR_CALL 'Unresolved reference: println#' type=IrErrorType
+                  CONST String type=IrErrorType value="Hello, world!"
+      ERROR_CALL 'Unresolved reference: <Inapplicable(PARAMETER_MAPPING_ERROR): [kotlin/run]>#' type=IrErrorType
