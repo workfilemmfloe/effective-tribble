@@ -1,0 +1,478 @@
+/*
+ * Copyright 2010-2019 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
+ */
+
+package org.jetbrains.kotlin.backend.common.lower.inline
+
+
+import org.jetbrains.kotlin.backend.common.*
+import org.jetbrains.kotlin.backend.common.ir.Symbols
+import org.jetbrains.kotlin.backend.common.ir.createTemporaryVariableWithWrappedDescriptor
+import org.jetbrains.kotlin.backend.common.lower.CoroutineIntrinsicLambdaOrigin
+import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
+import org.jetbrains.kotlin.config.languageVersionSettings
+import org.jetbrains.kotlin.descriptors.ValueDescriptor
+import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
+import org.jetbrains.kotlin.ir.builders.irReturn
+import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.*
+import org.jetbrains.kotlin.ir.symbols.impl.IrReturnableBlockSymbolImpl
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.isNullable
+import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
+import org.jetbrains.kotlin.ir.visitors.IrElementVisitor
+import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
+import org.jetbrains.kotlin.util.OperatorNameConventions
+
+class FunctionInlining(val context: CommonBackendContext) : IrElementTransformerVoidWithContext() {
+
+    fun inline(irModule: IrModuleFragment) = irModule.accept(this, data = null)
+
+    override fun visitFunctionAccess(expression: IrFunctionAccessExpression): IrExpression {
+        expression.transformChildrenVoid(this)
+        val callee = when (expression) {
+            is IrCall -> expression.target
+            is IrConstructorCall -> expression.target
+            else -> return expression
+        }
+        if (!callee.needsInlining)
+            return expression
+        if (Symbols.isLateinitIsInitializedPropertyGetter(callee))
+            return expression
+        if (Symbols.isTypeOfIntrinsic(callee))
+            return expression
+
+        val actualCallee = getFunctionDeclaration(callee)
+
+        val parent = allScopes.map { it.irElement }.filterIsInstance<IrDeclarationParent>().lastOrNull()
+
+        val inliner = Inliner(expression, actualCallee, currentScope!!, parent, context)
+        return inliner.inline()
+    }
+
+    private fun getFunctionDeclaration(function: IrFunction): IrFunction {
+        val descriptor = function.descriptor.original
+        val languageVersionSettings = context.configuration.languageVersionSettings
+        // TODO: Remove these hacks when coroutine intrinsics are fixed.
+        return when {
+            descriptor.isBuiltInIntercepted(languageVersionSettings) ->
+                error("Continuation.intercepted is not available with release coroutines")
+
+            descriptor.isBuiltInSuspendCoroutineUninterceptedOrReturn(languageVersionSettings) ->
+                context.ir.symbols.suspendCoroutineUninterceptedOrReturn
+
+            function == context.ir.symbols.coroutineContextGetter ->
+                context.ir.symbols.coroutineGetContext
+
+            else -> (function as? IrSimpleFunction)?.resolveFakeOverride() ?: function
+        }
+    }
+
+    private val IrFunction.needsInlining get() = this.isInline && !this.isExternal
+
+    private inner class Inliner(
+        val callSite: IrFunctionAccessExpression,
+        val callee: IrFunction,
+        val currentScope: ScopeWithIr,
+        val parent: IrDeclarationParent?,
+        val context: CommonBackendContext
+    ) {
+
+        val copyIrElement = run {
+            val typeParameters =
+                if (callee is IrConstructor)
+                    callee.parentAsClass.typeParameters
+                else callee.typeParameters
+            val typeArguments =
+                (0 until callSite.typeArgumentsCount).map {
+                    typeParameters[it].symbol to callSite.getTypeArgument(it)
+                }.associate { it }
+            DeepCopyIrTreeWithSymbolsForInliner(context, typeArguments, parent)
+        }
+
+        val substituteMap = mutableMapOf<IrValueParameter, IrExpression>()
+
+        fun inline() = inlineFunction(callSite, callee, true)
+
+        /**
+         * TODO: JVM inliner crashed on attempt inline this function from transform.kt with:
+         *  j.l.IllegalStateException: Couldn't obtain compiled function body for
+         *  public inline fun <reified T : org.jetbrains.kotlin.ir.IrElement> kotlin.collections.MutableList<T>.transform...
+         */
+        private inline fun <reified T : IrElement> MutableList<T>.transform(transformation: (T) -> IrElement) {
+            forEachIndexed { i, item ->
+                set(i, transformation(item) as T)
+            }
+        }
+
+        private fun inlineFunction(
+            callSite: IrFunctionAccessExpression,
+            callee: IrFunction,
+            performRecursiveInline: Boolean
+        ): IrReturnableBlock {
+            val copiedCallee = if (performRecursiveInline)
+                visitElement(copyIrElement.copy(callee)) as IrFunction
+            else copyIrElement.copy(callee) as IrFunction
+
+            val evaluationStatements = evaluateArguments(callSite, copiedCallee)
+            val statements = (copiedCallee.body as IrBlockBody).statements
+
+            val irReturnableBlockSymbol = IrReturnableBlockSymbolImpl(copiedCallee.descriptor.original)
+            val endOffset = callee.endOffset
+
+            val transformer = ParameterSubstitutor()
+            statements.transform { it.transform(transformer, data = null) }
+            statements.addAll(0, evaluationStatements)
+
+            val isCoroutineIntrinsicCall = callSite.descriptor.isBuiltInSuspendCoroutineUninterceptedOrReturn(
+                context.configuration.languageVersionSettings
+            )
+
+            return IrReturnableBlockImpl(
+                startOffset = callSite.startOffset,
+                endOffset = callSite.endOffset,
+                type = callSite.type,
+                symbol = irReturnableBlockSymbol,
+                origin = if (isCoroutineIntrinsicCall) CoroutineIntrinsicLambdaOrigin else null,
+                statements = statements,
+                inlineFunction = callee
+            ).apply {
+                /* creates irBuilder appending to the end of the given returnable block: thus why we initialize
+                 * irBuilder with (..., endOffset, endOffset).
+                 */
+                val irBuilder = context.createIrBuilder(this, endOffset, endOffset)
+                transformChildrenVoid(object : IrElementTransformerVoid() {
+                    override fun visitReturn(expression: IrReturn): IrExpression {
+                        expression.transformChildrenVoid(this)
+
+                        if (expression.irReturnTarget == copiedCallee)
+                            return irBuilder.irReturn(expression.value)
+                        return expression
+                    }
+                })
+                patchDeclarationParents(parent) // TODO: Why it is not enough to just run SetDeclarationsParentVisitor?
+            }
+        }
+
+        //---------------------------------------------------------------------//
+
+        private inner class ParameterSubstitutor : IrElementTransformerVoid() {
+
+            override fun visitGetValue(expression: IrGetValue): IrExpression {
+                val newExpression = super.visitGetValue(expression) as IrGetValue
+                val argument = substituteMap[newExpression.target] ?: return newExpression
+
+                argument.transformChildrenVoid(this) // Default argument can contain subjects for substitution.
+
+                return if (argument is IrGetValueWithoutLocation)
+                    argument.withLocation(newExpression.startOffset, newExpression.endOffset)
+                else (copyIrElement.copy(argument) as IrExpression)
+            }
+
+            //-----------------------------------------------------------------//
+
+            override fun visitCall(expression: IrCall): IrExpression {
+                if (!isLambdaCall(expression))
+                    return super.visitCall(expression)
+
+                val dispatchReceiver = expression.dispatchReceiver as IrGetValue
+                val functionArgument = substituteMap[dispatchReceiver.target] ?: return super.visitCall(expression)
+                if ((dispatchReceiver.target as? IrValueParameter)?.isNoinline == true)
+                    return super.visitCall(expression)
+
+                if (functionArgument is IrFunctionReference) {
+                    functionArgument.transformChildrenVoid(this)
+
+                    val function = functionArgument.target
+                    val functionParameters = function.explicitParameters
+                    val boundFunctionParameters = functionArgument.getArgumentsWithIr()
+                    val unboundFunctionParameters = functionParameters - boundFunctionParameters.map { it.first }
+                    val boundFunctionParametersMap = boundFunctionParameters.associate { it.first to it.second }
+
+                    var unboundIndex = 0
+                    val unboundArgsSet = unboundFunctionParameters.toSet()
+                    val valueParameters = expression.getArgumentsWithIr().drop(1) // Skip dispatch receiver.
+
+                    val immediateCall = with(expression) {
+                        if (function is IrConstructor)
+                            IrConstructorCallImpl.fromSymbolOwner(startOffset, endOffset, function.returnType, function)
+                        else
+                            IrCallImpl(startOffset, endOffset, function.returnType, functionArgument.target)
+                    }.apply {
+                        functionParameters.forEach {
+                            val argument =
+                                if (unboundArgsSet.contains(it)) {
+                                    assert(unboundIndex < valueParameters.size) {
+                                        "Attempt to use unbound parameter outside of the callee's value parameters"
+                                    }
+                                    valueParameters[unboundIndex++].second
+                                } else {
+                                    val arg = boundFunctionParametersMap[it]!!
+                                    if (arg is IrGetValueWithoutLocation)
+                                        arg.withLocation(expression.startOffset, expression.endOffset)
+                                    else arg
+                                }
+                            when (it) {
+                                function.dispatchReceiverParameter ->
+                                    this.dispatchReceiver = argument.implicitCastIfNeededTo(function.dispatchReceiverParameter!!.type)
+
+                                function.extensionReceiverParameter ->
+                                    this.extensionReceiver = argument.implicitCastIfNeededTo(function.extensionReceiverParameter!!.type)
+
+                                else -> putValueArgument(it.index, argument.implicitCastIfNeededTo(function.valueParameters[it.index].type))
+                            }
+                        }
+                        assert(unboundIndex == valueParameters.size) { "Not all arguments of the callee are used" }
+                        for (index in 0 until functionArgument.typeArgumentsCount)
+                            putTypeArgument(index, functionArgument.getTypeArgument(index))
+                    }.implicitCastIfNeededTo(expression.type)
+                    return this@FunctionInlining.visitExpression(super.visitExpression(immediateCall))
+                }
+                if (functionArgument !is IrFunctionExpression)
+                    return super.visitCall(expression)
+
+                // Inline the lambda. Lambda parameters will be substituted with lambda arguments.
+                val newExpression = inlineFunction(
+                    expression,
+                    functionArgument.function,
+                    false
+                )
+                // Substitute lambda arguments with target function arguments.
+                return newExpression.transform(
+                    this,
+                    null
+                )
+            }
+
+            //-----------------------------------------------------------------//
+
+            override fun visitElement(element: IrElement) = element.accept(this, null)
+        }
+
+        private fun IrExpression.implicitCastIfNeededTo(type: IrType) =
+            if (type == this.type)
+                this
+            else
+                IrTypeOperatorCallImpl(startOffset, endOffset, type, IrTypeOperator.IMPLICIT_CAST, type, this)
+
+        private fun isLambdaCall(irCall: IrCall): Boolean {
+            val callee = irCall.target
+            val dispatchReceiver = callee.dispatchReceiverParameter ?: return false
+            assert(!dispatchReceiver.type.isKFunction())
+
+            return (dispatchReceiver.type.isFunction() || dispatchReceiver.type.isSuspendFunction())
+                    && callee.name == OperatorNameConventions.INVOKE
+                    && irCall.dispatchReceiver is IrGetValue
+        }
+
+        //-------------------------------------------------------------------------//
+
+        private fun IrValueParameter.isInlineParameter() =
+            !isNoinline && !type.isNullable() && (type.isFunction() || type.isSuspendFunction())
+
+        private inner class ParameterToArgument(
+            val parameter: IrValueParameter,
+            val argumentExpression: IrExpression
+        ) {
+
+            val isInlinableLambdaArgument: Boolean
+                get() = parameter.isInlineParameter() &&
+                        (argumentExpression is IrFunctionReference
+                                || argumentExpression is IrFunctionExpression)
+
+            val isImmutableVariableLoad: Boolean
+                get() = argumentExpression.let {
+                    it is IrGetValue && !it.target.let { it is IrVariable && it.isVar }
+                }
+        }
+
+        // callee might be a copied version of callsite
+        private fun buildParameterToArgument(callSite: IrFunctionAccessExpression, callee: IrFunction): List<ParameterToArgument> {
+
+            val parameterToArgument = mutableListOf<ParameterToArgument>()
+
+            if (callSite.dispatchReceiver != null && callee.dispatchReceiverParameter != null)
+                parameterToArgument += ParameterToArgument(
+                    parameter = callee.dispatchReceiverParameter!!,
+                    argumentExpression = callSite.dispatchReceiver!!
+                )
+
+            val valueArguments =
+                callSite.target.valueParameters.map { callSite.getValueArgument(it.index) }.toMutableList()
+
+            if (callee.extensionReceiverParameter != null) {
+                parameterToArgument += ParameterToArgument(
+                    parameter = callee.extensionReceiverParameter!!,
+                    argumentExpression = if (callSite.extensionReceiver != null) {
+                        callSite.extensionReceiver!!
+                    } else {
+                        // Special case: lambda with receiver is called as usual lambda:
+                        valueArguments.removeAt(0)!!
+                    }
+                )
+            } else if (callSite.extensionReceiver != null) {
+                // Special case: usual lambda is called as lambda with receiver:
+                valueArguments.add(0, callSite.extensionReceiver!!)
+            }
+
+            val parametersWithDefaultToArgument = mutableListOf<ParameterToArgument>()
+            for (parameter in callee.valueParameters) {
+                val argument = valueArguments[parameter.index]
+                when {
+                    argument != null -> {
+                        parameterToArgument += ParameterToArgument(
+                            parameter = parameter,
+                            argumentExpression = argument
+                        )
+                    }
+
+                    // After ExpectDeclarationsRemoving pass default values from expect declarations
+                    // are represented correctly in IR.
+                    parameter.defaultValue != null -> {  // There is no argument - try default value.
+                        parametersWithDefaultToArgument += ParameterToArgument(
+                            parameter = parameter,
+                            argumentExpression = parameter.defaultValue!!.expression
+                        )
+                    }
+
+                    parameter.varargElementType != null -> {
+                        val emptyArray = IrVarargImpl(
+                            startOffset = callSite.startOffset,
+                            endOffset = callSite.endOffset,
+                            type = parameter.type,
+                            varargElementType = parameter.varargElementType!!
+                        )
+                        parameterToArgument += ParameterToArgument(
+                            parameter = parameter,
+                            argumentExpression = emptyArray
+                        )
+                    }
+
+                    else -> {
+                        val message = "Incomplete expression: call to ${callee.descriptor} " +
+                                "has no argument at index ${parameter.index}"
+                        throw Error(message)
+                    }
+                }
+            }
+            // All arguments except default are evaluated at callsite,
+            // but default arguments are evaluated inside callee.
+            return parameterToArgument + parametersWithDefaultToArgument
+        }
+
+        //-------------------------------------------------------------------------//
+
+        private fun evaluateArguments(functionReference: IrFunctionReference): List<IrStatement> {
+            val arguments = functionReference.getArgumentsWithIr().map { ParameterToArgument(it.first, it.second) }
+            val evaluationStatements = mutableListOf<IrStatement>()
+            val substitutor = ParameterSubstitutor()
+            val referenced = functionReference.target
+            arguments.forEach {
+                val newArgument = if (it.isImmutableVariableLoad) {
+                    it.argumentExpression.transform( // Arguments may reference the previous ones - substitute them.
+                        substitutor,
+                        data = null
+                    )
+                } else {
+                    val newVariable =
+                        currentScope.scope.createTemporaryVariableWithWrappedDescriptor(
+                            irExpression = it.argumentExpression.transform( // Arguments may reference the previous ones - substitute them.
+                                substitutor,
+                                data = null
+                            ),
+                            nameHint = callee.name.toString(),
+                            isMutable = false
+                        )
+
+                    evaluationStatements.add(newVariable)
+
+                    IrGetValueWithoutLocation(newVariable)
+                }
+                when (it.parameter) {
+                    referenced.dispatchReceiverParameter -> functionReference.dispatchReceiver = newArgument
+                    referenced.extensionReceiverParameter -> functionReference.extensionReceiver = newArgument
+                    else -> functionReference.putValueArgument(it.parameter.index, newArgument)
+                }
+            }
+            return evaluationStatements
+        }
+
+        private fun evaluateArguments(callSite: IrFunctionAccessExpression, callee: IrFunction): List<IrStatement> {
+            val arguments = buildParameterToArgument(callSite, callee)
+            val evaluationStatements = mutableListOf<IrStatement>()
+            val substitutor = ParameterSubstitutor()
+            arguments.forEach {
+                /*
+                 * We need to create temporary variable for each argument except inlinable lambda arguments.
+                 * For simplicity and to produce simpler IR we don't create temporaries for every immutable variable,
+                 * not only for those referring to inlinable lambdas.
+                 */
+                if (it.isInlinableLambdaArgument) {
+                    substituteMap[it.parameter] = it.argumentExpression
+                    (it.argumentExpression as? IrFunctionReference)?.let { evaluationStatements += evaluateArguments(it) }
+                    return@forEach
+                }
+
+                if (it.isImmutableVariableLoad) {
+                    substituteMap[it.parameter] =
+                        it.argumentExpression.transform( // Arguments may reference the previous ones - substitute them.
+                            substitutor,
+                            data = null
+                        )
+                    return@forEach
+                }
+
+                val variableInitializer = it.argumentExpression.transform(substitutor, data = null) // Arguments may reference the previous ones - substitute them.
+                val newVariable =
+                    currentScope.scope.createTemporaryVariableWithWrappedDescriptor(
+                        irExpression = IrBlockImpl (variableInitializer.startOffset,
+                                variableInitializer.endOffset,
+                                variableInitializer.type,
+                                InlinerExpressionLocationHint(currentScope.irElement as IrSymbolOwner)).apply {
+                            statements.add(variableInitializer)
+                        },
+                        nameHint = callee.name.toString(),
+                        isMutable = false
+                    )
+
+                evaluationStatements.add(newVariable)
+                substituteMap[it.parameter] = IrGetValueWithoutLocation(newVariable)
+            }
+            return evaluationStatements
+        }
+    }
+
+    private class IrGetValueWithoutLocation(
+        target: IrValueDeclaration,
+        override val origin: IrStatementOrigin? = null
+    ) : IrTerminalDeclarationReferenceBase<IrValueDeclaration, ValueDescriptor>(
+        UNDEFINED_OFFSET, UNDEFINED_OFFSET,
+        target.type,
+        target, target.descriptor
+    ), IrGetValue {
+        override fun <R, D> accept(visitor: IrElementVisitor<R, D>, data: D) =
+            visitor.visitGetValue(this, data)
+
+        override fun copy(): IrGetValue {
+            TODO("not implemented")
+        }
+
+        fun withLocation(startOffset: Int, endOffset: Int) =
+            IrGetValueImpl(startOffset, endOffset, type, target, origin)
+    }
+}
+
+class InlinerExpressionLocationHint(val inlineAt: IrSymbolOwner) : IrStatementOrigin {
+    override fun toString(): String = "(${this.javaClass.simpleName} : $functionNameOrDefaultToString @${functionFileOrNull?.fileEntry?.name})"
+
+    private val functionFileOrNull: IrFile?
+        get() = (inlineAt as? IrFunction)?.file
+
+    private val functionNameOrDefaultToString: String
+        get() = (inlineAt as? IrFunction)?.name?.asString() ?: inlineAt.toString()
+}
