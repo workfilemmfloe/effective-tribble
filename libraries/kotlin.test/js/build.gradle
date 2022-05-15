@@ -1,0 +1,57 @@
+description = 'Kotlin Test for JS'
+
+apply plugin: 'kotlin-platform-js'
+
+configurePublishing(project)
+
+configurations {
+    sources
+    distJs
+}
+
+dependencies {
+    expectedBy project(':kotlin-test:kotlin-test-common')
+    expectedBy project(':kotlin-test:kotlin-test-annotations-common')
+    compile kotlinStdlib("js")
+}
+
+compileKotlin2Js {
+    kotlinOptions.freeCompilerArgs = ["-Xallow-kotlin-package", "-Xuse-experimental=kotlin.contracts.ExperimentalContracts"]
+    kotlinOptions {
+        moduleKind = "umd"
+        outputFile = "${buildDir}/classes/main/kotlin-test.js"
+        sourceMap = true
+        sourceMapPrefix = "./"
+        sourceMapEmbedSources = "always"
+    }
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.freeCompilerArgs = ["-Xallow-kotlin-package"]
+    kotlinOptions {
+        metaInfo = false
+        moduleKind = "umd"
+    }
+}
+
+
+archivesBaseName = 'kotlin-test-js'
+
+jar {
+    manifestAttributes(manifest, project, 'Test')
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from (sourceSets.main.allSource)
+}
+
+artifacts {
+    archives sourcesJar
+    sources sourcesJar
+    distJs(file(compileKotlin2Js.kotlinOptions.outputFile)) {
+        builtBy(compileKotlin2Js)
+    }
+}
+
+javadocJar()
